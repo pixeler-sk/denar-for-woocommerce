@@ -8,15 +8,17 @@
     /* Designed at 772x250, rendered at 1x and 2x (1544x500). */
     .bar { position: absolute; top: 0; left: 0; width: 140px; height: 5px; background: var(--sky); }
 
-    .copy { position: absolute; top: 34px; left: 40px; width: 350px; }
+    .copy { position: absolute; top: 30px; left: 40px; width: 350px; }
+    /* Bottom-left ~90 px stays empty: WordPress overlays the plugin name there. */
+    .head { display: flex; align-items: baseline; gap: 12px; }
+    .head .logo { font-size: 20px; }
     .eyebrow { color: var(--sky); font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
-    h1 { margin-top: 11px; font-size: 31px; font-weight: 600; line-height: 1.12; letter-spacing: -0.015em; }
+    h1 { margin-top: 14px; font-size: 30px; font-weight: 600; line-height: 1.12; letter-spacing: -0.015em; }
     .sub { margin-top: 11px; color: var(--text-on-dark); font-size: 13px; line-height: 1.45; }
 
-    .brand { position: absolute; left: 40px; bottom: 24px; font-size: 21px; }
 
     /* Order -> proforma -> invoice, the flow the plugin automates. */
-    .flow { position: absolute; top: 36px; right: 72px; width: 290px; display: flex; flex-direction: column; gap: 9px; }
+    .flow { position: absolute; top: 30px; right: 72px; width: 290px; display: flex; flex-direction: column; gap: 9px; }
     .step {
         display: flex; align-items: center; gap: 11px; padding: 10px 12px;
         border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 11px;
@@ -41,12 +43,9 @@
     <div class="bar"></div>
 
     <div class="copy">
-        <div class="eyebrow">Pre WooCommerce</div>
+        <div class="head"><span class="logo" role="img" aria-label="Denár">den<span class="logo-a">a<span class="logo-coin" aria-hidden="true"><svg width="40" height="29" viewBox="0 0 44 32"><defs><linearGradient id="f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9cc8ff"/><stop offset="1" stop-color="#6aa9f2"/></linearGradient><linearGradient id="e" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1e4f92"/><stop offset="0.5" stop-color="#2f6fc4"/><stop offset="1" stop-color="#1e4f92"/></linearGradient></defs><path d="M2 11v6a20 10 0 0 0 40 0v-6a20 10 0 0 1 -40 0z" fill="url(#e)"/><ellipse cx="22" cy="11" rx="20" ry="10" fill="url(#f)"/><ellipse cx="22" cy="11" rx="20" ry="10" fill="none" stroke="#e3efff" stroke-width="0.9" stroke-opacity="0.85"/><ellipse cx="22" cy="11" rx="15.5" ry="7.6" fill="#5c9be8"/><ellipse cx="22" cy="11" rx="15.5" ry="7.6" fill="none" stroke="#e3efff" stroke-width="1.1" stroke-opacity="0.9"/><path d="M8 8.5a15 7 0 0 1 20-5.5" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.9"/></svg></span></span><span>r</span></span><span class="eyebrow">pre WooCommerce</span></div>
         <h1>Doklad ku každej objednávke.</h1>
-        <p class="sub">Zálohová faktúra s PAY by square, po úhrade faktúra, pri vrátení peňazí dobropis. Automaticky.</p>
     </div>
-
-    <span class="logo brand" role="img" aria-label="Denár">den<span class="logo-a">a<span class="logo-coin" aria-hidden="true"><svg width="40" height="29" viewBox="0 0 44 32"><defs><linearGradient id="f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9cc8ff"/><stop offset="1" stop-color="#6aa9f2"/></linearGradient><linearGradient id="e" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1e4f92"/><stop offset="0.5" stop-color="#2f6fc4"/><stop offset="1" stop-color="#1e4f92"/></linearGradient></defs><path d="M2 11v6a20 10 0 0 0 40 0v-6a20 10 0 0 1 -40 0z" fill="url(#e)"/><ellipse cx="22" cy="11" rx="20" ry="10" fill="url(#f)"/><ellipse cx="22" cy="11" rx="20" ry="10" fill="none" stroke="#e3efff" stroke-width="0.9" stroke-opacity="0.85"/><ellipse cx="22" cy="11" rx="15.5" ry="7.6" fill="#5c9be8"/><ellipse cx="22" cy="11" rx="15.5" ry="7.6" fill="none" stroke="#e3efff" stroke-width="1.1" stroke-opacity="0.9"/><path d="M8 8.5a15 7 0 0 1 20-5.5" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.9"/></svg></span></span><span>r</span></span>
 
     <!-- Made-up order and numbers - never real customers. -->
     <div class="flow">

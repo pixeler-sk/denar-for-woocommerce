@@ -2,7 +2,7 @@
 Contributors: pixeler
 Tags: invoice, woocommerce, slovakia, pay by square, e-invoice
 Requires at least: 6.5
-Tested up to: 6.8
+Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
 Stable tag: 0.1.0

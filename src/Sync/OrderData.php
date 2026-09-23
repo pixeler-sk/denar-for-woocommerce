@@ -34,14 +34,23 @@ final class OrderData {
 	 * @param string    $site_key Stable key of this shop, see OrderSync::site_key().
 	 */
 	public static function collect( \WC_Order $order, string $site_key ): array {
-		$lines = array();
+		$lines          = array();
+		$discount_gross = 0.0;
 
 		foreach ( $order->get_items( 'line_item' ) as $item ) {
 			/** Product line. @var \WC_Order_Item_Product $item */
+			$gross = round( (float) $item->get_subtotal() + (float) $item->get_subtotal_tax(), 2 );
+
+			// What the coupons took off this line, with VAT - read off the
+			// line itself; discount_total and discount_tax are rounded apart
+			// and can be a cent off the order total.
+			$discount_gross += $gross - round( (float) $item->get_total() + (float) $item->get_total_tax(), 2 );
+
 			$lines[] = array(
 				'label'    => $item->get_name(),
 				'quantity' => (float) $item->get_quantity(),
 				'net'      => (float) $item->get_subtotal(),
+				'gross'    => $gross,
 				'rate'     => self::rate( $item->get_taxes()['subtotal'] ?? array(), (float) $item->get_subtotal(), (float) $item->get_subtotal_tax() ),
 			);
 		}
@@ -52,6 +61,7 @@ final class OrderData {
 				'label'    => $item->get_name(),
 				'quantity' => 1.0,
 				'net'      => (float) $item->get_total(),
+				'gross'    => (float) $item->get_total() + (float) $item->get_total_tax(),
 				'rate'     => self::rate( $item->get_taxes()['total'] ?? array(), (float) $item->get_total(), (float) $item->get_total_tax() ),
 			);
 		}
@@ -64,6 +74,8 @@ final class OrderData {
 			'currency'           => $order->get_currency(),
 			'payment_method'     => $order->get_payment_method(),
 			'total'              => (float) $order->get_total(),
+			// Prices were entered with VAT: send them so, Denár derives the base.
+			'prices_include_tax' => (bool) $order->get_prices_include_tax(),
 			/* translators: %s: order number */
 			'note'               => sprintf( __( 'Order no. %s', 'denar-for-woocommerce' ), $order->get_order_number() ),
 			'customer_reference' => $order->get_customer_id() ? 'woo:' . $site_key . ':c' . $order->get_customer_id() : '',
@@ -84,6 +96,7 @@ final class OrderData {
 			),
 			'lines'              => $lines,
 			'discount_net'       => (float) $order->get_discount_total(),
+			'discount_gross'     => round( $discount_gross, 2 ),
 			'discount_reason'    => implode( ', ', $order->get_coupon_codes() ),
 			// px-shop-core company module: why VAT was not charged.
 			'vat_exempt_reason'  => (string) $order->get_meta( '_px_vat_exempt_reason' ),
@@ -113,17 +126,19 @@ final class OrderData {
 				'label'    => $item->get_name(),
 				'quantity' => $item instanceof \WC_Order_Item_Product ? (float) $item->get_quantity() : 1.0,
 				'net'      => (float) $item->get_total(),
+				'gross'    => (float) $item->get_total() + (float) $item->get_total_tax(),
 				'rate'     => self::rate( $item->get_taxes()['total'] ?? array(), (float) $item->get_total(), (float) $item->get_total_tax() ),
 			);
 		}
 
 		return array(
-			'lines'         => $lines,
-			'amount'        => (float) $refund->get_amount(),
-			'fallback_rate' => self::main_rate( $order ),
+			'prices_include_tax' => (bool) $order->get_prices_include_tax(),
+			'lines'              => $lines,
+			'amount'             => (float) $refund->get_amount(),
+			'fallback_rate'      => self::main_rate( $order ),
 			/* translators: %s: order number */
-			'label'         => sprintf( __( 'Refund for order no. %s', 'denar-for-woocommerce' ), $order->get_order_number() ),
-			'note'          => (string) $refund->get_reason(),
+			'label'              => sprintf( __( 'Refund for order no. %s', 'denar-for-woocommerce' ), $order->get_order_number() ),
+			'note'               => (string) $refund->get_reason(),
 		);
 	}
 

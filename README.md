@@ -10,7 +10,7 @@ je v Denári, plugin len posiela objednávky a prijíma webhooky.
 - [x] 0.1 kostra: nastavenia, overenie spojenia (`GET /me`), webhook endpoint s HMAC, aktualizácie z GitHub releases
 - [x] 0.2 objednávka -> doklad (karta = faktúra hneď, dobierka pri vybavení), prevod: proforma s PAY by square (VS = číslo objednávky) -> webhook `document.paid` -> `payment_complete()` -> faktúra z proformy; refund -> dobropis, zrušenie -> storno proformy; kontrola súm (nesedí = koncept); box v objednávke s PDF
 - [x] B2B údaje z `_billing_ic` / `_billing_dic` / `_billing_dic_dph` (px-shop-core, WPify), prenesenie DPH a vývoz z px-shop-core
-- [ ] zaokrúhlenie pri cenách s DPH - Woo počíta DPH z ceny s DPH, Denár zo základu; rozdiel o cent nechá doklad konceptom (riešenie v Denári)
+- [x] ceny s DPH: pri `prices_include_tax` ide `prices_include_vat` + `unit_price_with_vat`, zľava z kupónov ako rozdiel riadkov s DPH - suma sedí na cent (vyžaduje Denár s `prices_include_vat`)
 - [ ] B2B polia v blokovej pokladni, keď px-shop-core nie je
 - [ ] PDF v e-maile objednávky a v Môj účet (podpísaný odkaz, Denár T081)
 

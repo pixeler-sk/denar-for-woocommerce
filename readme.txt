@@ -80,7 +80,8 @@ WooCommerce -> Status -> Logs, source "denar". The API key is never logged.
 = 0.2.0 =
 * Documents for orders: proforma for bank transfers, invoice for paid orders (from the proforma when there is one), invoice on completion for cash on delivery, credit notes for refunds, cancelling unpaid proformas.
 * Order box with the documents and PDF download, order action "Send to Denár again".
-* Totals check - a document that does not match the order stays a draft.
+* Shops with prices including VAT send the prices with VAT (Denár prices_include_vat), so the document total is exactly the order total, coupons included.
+* Totals check - a document that does not match the order stays a draft; a retry updates the draft with the current order.
 
 = 0.1.2 =
 * Ready for wordpress.org: separate build without the GitHub updater, External services section in the readme.

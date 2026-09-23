@@ -126,4 +126,43 @@ final class PayloadBuilderTest extends TestCase {
 		$this->assertTrue( PayloadBuilder::totals_match( '-12.30', '12.30' ) );
 		$this->assertFalse( PayloadBuilder::totals_match( '29.96', '29.97' ) );
 	}
+
+	public function test_prices_with_vat_are_sent_as_entered(): void {
+		$order = $this->order(
+			array(
+				'prices_include_tax' => true,
+				'discount_gross'     => '1.23',
+				'discount_reason'    => 'LETO',
+			)
+		);
+		$order['lines'][0]['gross'] = '19.98';
+		$order['lines'][1]['gross'] = '4.50';
+
+		$payload = PayloadBuilder::document( $order, 'invoice', 'r' );
+
+		$this->assertTrue( $payload['prices_include_vat'] );
+		$this->assertSame( '9.99', $payload['items'][0]['unit_price_with_vat'] );
+		$this->assertArrayNotHasKey( 'unit_price', $payload['items'][0] );
+		$this->assertSame( '1.23', $payload['discount']['amount_with_vat'] );
+		$this->assertArrayNotHasKey( 'amount', $payload['discount'] );
+	}
+
+	public function test_credit_note_with_vat(): void {
+		$lines = PayloadBuilder::credit_note(
+			array(
+				'prices_include_tax' => true,
+				'lines'              => array( array( 'label' => 'Káva', 'quantity' => -3, 'net' => '-24.37', 'gross' => '-29.97', 'rate' => 23 ) ),
+				'amount'             => '29.97',
+				'label'              => 'x',
+			),
+			'r'
+		);
+		$this->assertSame( '9.99', $lines['items'][0]['unit_price_with_vat'] );
+
+		$amount = PayloadBuilder::credit_note(
+			array( 'prices_include_tax' => true, 'lines' => array(), 'amount' => '12.30', 'fallback_rate' => 23, 'label' => 'x' ),
+			'r'
+		);
+		$this->assertSame( '12.30', $amount['items'][0]['unit_price_with_vat'] );
+	}
 }

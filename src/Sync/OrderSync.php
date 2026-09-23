@@ -191,7 +191,7 @@ final class OrderSync {
 		}
 
 		$data     = OrderData::collect( $order, Settings::site_key() );
-		$document = self::create( $client, PayloadBuilder::document( $data, 'proforma', self::reference( $order, 'proforma' ), self::options() ) );
+		$document = self::create( $client, PayloadBuilder::document( $data, 'proforma', self::reference( $order, 'proforma' ), self::options() ), $data['total'] );
 		$document = self::issue_if_matching( $order, $client, $document, $data['total'], 'proforma' );
 
 		if ( null !== $document['number'] ) {
@@ -222,6 +222,12 @@ final class OrderSync {
 		$proforma  = OrderState::get( $order, 'proforma' );
 		$document  = $client->find_document( $reference );
 
+		// A draft left by an earlier attempt goes through create() again,
+		// which brings it up to date with the order.
+		if ( null !== $document && empty( $document['is_issued'] ) ) {
+			$document = null;
+		}
+
 		if ( null === $document && null !== $proforma && '' !== $proforma['number'] ) {
 			// Proforma paid by hand in the shop (not paired in Denár yet).
 			if ( ! $proforma['is_paid'] ) {
@@ -246,7 +252,7 @@ final class OrderSync {
 			}
 
 			$data     = OrderData::collect( $order, Settings::site_key() );
-			$document = self::create( $client, PayloadBuilder::document( $data, 'invoice', $reference, self::options() ) );
+			$document = self::create( $client, PayloadBuilder::document( $data, 'invoice', $reference, self::options() ), $data['total'] );
 		}
 
 		OrderState::put( $order, 'invoice', $document );
@@ -417,13 +423,23 @@ final class OrderSync {
 	}
 
 	/**
-	 * POST /documents (returns the existing one for a known reference).
+	 * POST /documents. For a known reference Denár returns the existing
+	 * document unchanged - a draft left behind by an earlier attempt (say a
+	 * total that did not match) is then updated with the current order.
 	 *
-	 * @param Client $client  API client.
-	 * @param array  $payload Document payload.
+	 * @param Client $client   API client.
+	 * @param array  $payload  Document payload.
+	 * @param float  $expected Shop total (gross).
 	 */
-	private static function create( Client $client, array $payload ): array {
-		return $client->post( '/documents', $payload )['data'];
+	private static function create( Client $client, array $payload, float $expected ): array {
+		$document = $client->post( '/documents', $payload )['data'];
+
+		if ( empty( $document['is_issued'] ) && ! PayloadBuilder::totals_match( $document['totals']['with_vat'] ?? '', $expected ) ) {
+			unset( $payload['document_type'], $payload['external_reference'] );
+			$document = $client->patch( '/documents/' . $document['id'], $payload )['data'];
+		}
+
+		return $document;
 	}
 
 	/**

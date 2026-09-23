@@ -13,6 +13,12 @@ namespace Denar\WooCommerce\Sync;
  * Unit tested. Amounts come in as numbers or numeric strings and leave as
  * strings with two decimals, compared in whole cents. Denár computes VAT
  * itself, the shop only checks the result (see totals_match()).
+ *
+ * A shop with prices including VAT (`prices_include_tax`) sends the prices
+ * with VAT (`prices_include_vat`, `unit_price_with_vat`, discount
+ * `amount_with_vat`): Denár then works the base out of them, so the document
+ * total is exactly the order total. Priced without VAT, both sides compute
+ * VAT from the base and agree as well.
  */
 final class PayloadBuilder {
 
@@ -42,21 +48,23 @@ final class PayloadBuilder {
 	 * @param array  $options       number_series, reverse_charge_regime.
 	 */
 	public static function document( array $order, string $document_type, string $reference, array $options = array() ): array {
+		$with_vat = ! empty( $order['prices_include_tax'] );
+		$key      = $with_vat ? 'gross' : 'net';
 		$items    = array();
-		$discount = self::cents( $order['discount_net'] ?? 0 );
+		$discount = self::cents( $order[ 'discount_' . $key ] ?? 0 );
 		$reasons  = array_filter( array( (string) ( $order['discount_reason'] ?? '' ) ) );
 
 		foreach ( $order['lines'] as $line ) {
-			$net = self::cents( $line['net'] );
+			$amount = self::cents( $line[ $key ] ?? $line['net'] );
 
 			// Negative fees are discounts; EN 16931 (BR-27) forbids negative lines.
-			if ( $net < 0 ) {
-				$discount -= $net;
+			if ( $amount < 0 ) {
+				$discount -= $amount;
 				$reasons[] = (string) $line['label'];
 				continue;
 			}
 
-			$items[] = self::item( $line );
+			$items[] = self::item( $line, $with_vat );
 		}
 
 		$payload = array(
@@ -70,6 +78,10 @@ final class PayloadBuilder {
 			'items'              => $items,
 		);
 
+		if ( $with_vat ) {
+			$payload['prices_include_vat'] = true;
+		}
+
 		$symbol = self::variable_symbol( (string) ( $order['order_number'] ?? '' ) );
 		if ( null !== $symbol ) {
 			// Same number the customer sees in the WooCommerce bank transfer
@@ -79,7 +91,7 @@ final class PayloadBuilder {
 
 		if ( $discount > 0 ) {
 			$payload['discount'] = array(
-				'amount' => self::money( $discount / 100 ),
+				( $with_vat ? 'amount_with_vat' : 'amount' ) => self::money( $discount / 100 ),
 				'reason' => implode( ', ', array_unique( $reasons ) ),
 			);
 		}
@@ -99,28 +111,36 @@ final class PayloadBuilder {
 	/**
 	 * Credit note body for a refund.
 	 *
-	 * @param array  $refund    Plain refund data: lines (as in orders), amount (gross, positive), fallback_rate, note.
+	 * @param array  $refund    Plain refund data: lines (as in orders), amount (gross, positive), fallback_rate, note, prices_include_tax.
 	 * @param string $reference external_reference of the credit note.
 	 */
 	public static function credit_note( array $refund, string $reference ): array {
-		$items = array();
+		$with_vat = ! empty( $refund['prices_include_tax'] );
+		$items    = array();
 		// WooCommerce stores refund lines negative; Denár wants them positive.
 		foreach ( $refund['lines'] as $line ) {
 			if ( 0 !== self::cents( $line['net'] ) ) {
-				$items[] = self::item( $line );
+				$items[] = self::item( $line, $with_vat );
 			}
 		}
 
-		// Amount-only refund: one line, net derived from the gross amount.
+		// Amount-only refund: one line for the refunded amount.
 		if ( array() === $items ) {
-			$rate    = (float) ( $refund['fallback_rate'] ?? 0 );
-			$gross   = self::money( $refund['amount'] );
-			$items[] = array(
-				'label'      => (string) $refund['label'],
-				'quantity'   => 1,
-				'unit_price' => self::money( (float) $gross / ( 1 + $rate / 100 ) ),
-				'vat_rate'   => $rate,
+			$rate  = (float) ( $refund['fallback_rate'] ?? 0 );
+			$gross = (float) $refund['amount'];
+			$item  = array(
+				'label'    => (string) $refund['label'],
+				'quantity' => 1,
+				'vat_rate' => $rate,
 			);
+
+			if ( $with_vat ) {
+				$item['unit_price_with_vat'] = self::money( $gross );
+			} else {
+				$item['unit_price'] = self::money( $gross / ( 1 + $rate / 100 ) );
+			}
+
+			$items[] = $item;
 		}
 
 		return array(
@@ -191,19 +211,25 @@ final class PayloadBuilder {
 	/**
 	 * One document line.
 	 *
-	 * @param array $line label, quantity, net (line total without VAT), rate.
+	 * @param array $line     label, quantity, net / gross (line total without / with VAT), rate.
+	 * @param bool  $with_vat Send the price with VAT.
 	 */
-	private static function item( array $line ): array {
+	private static function item( array $line, bool $with_vat = false ): array {
 		$quantity = (float) ( $line['quantity'] ?? 1 );
 		$quantity = 0.0 === $quantity ? 1.0 : abs( $quantity );
-		$net      = abs( (float) $line['net'] );
 
 		$item = array(
-			'label'      => mb_substr( (string) $line['label'], 0, 255 ),
-			'quantity'   => $quantity,
-			'unit_price' => self::money( $net / $quantity ),
-			'vat_rate'   => (float) ( $line['rate'] ?? 0 ),
+			'label'    => mb_substr( (string) $line['label'], 0, 255 ),
+			'quantity' => $quantity,
 		);
+
+		if ( $with_vat ) {
+			$item['unit_price_with_vat'] = self::money( abs( (float) ( $line['gross'] ?? $line['net'] ) ) / $quantity );
+		} else {
+			$item['unit_price'] = self::money( abs( (float) $line['net'] ) / $quantity );
+		}
+
+		$item['vat_rate'] = (float) ( $line['rate'] ?? 0 );
 
 		if ( '' !== (string) ( $line['description'] ?? '' ) ) {
 			$item['description'] = (string) $line['description'];

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-23T10:37:14+00:00\n"
+"POT-Creation-Date: 2026-09-23T10:55:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: denar-for-woocommerce\n"
@@ -39,16 +39,82 @@ msgstr ""
 msgid "https://pixeler.sk/"
 msgstr ""
 
+#: src/Admin/OrderBox.php:43
 #: src/Admin/SettingsPage.php:55
 msgid "Denár"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:66
-msgid "Settings"
+#: src/Admin/OrderBox.php:63
+msgid "No document yet."
 msgstr ""
 
+#: src/Admin/OrderBox.php:64
+msgid "Sending to Denár is off or the API key is missing."
+msgstr ""
+
+#: src/Admin/OrderBox.php:72
+msgid "(draft)"
+msgstr ""
+
+#: src/Admin/OrderBox.php:82
+msgid "Download PDF"
+msgstr ""
+
+#: src/Admin/OrderBox.php:92
+msgid "Fix it in Denár or on the order, then use the order action \"Send to Denár again\"."
+msgstr ""
+
+#: src/Admin/OrderBox.php:103
+msgid "Send to Denár again"
+msgstr ""
+
+#: src/Admin/OrderBox.php:123
+msgid "Denár: queued again."
+msgstr ""
+
+#: src/Admin/OrderBox.php:136
 #: src/Admin/SettingsPage.php:117
 msgid "You are not allowed to do this."
+msgstr ""
+
+#: src/Admin/OrderBox.php:144
+msgid "Document not found."
+msgstr ""
+
+#: src/Admin/OrderBox.php:187
+msgid "Proforma"
+msgstr ""
+
+#: src/Admin/OrderBox.php:188
+msgid "Credit note"
+msgstr ""
+
+#: src/Admin/OrderBox.php:189
+msgid "Invoice"
+msgstr ""
+
+#: src/Admin/OrderBox.php:200
+msgid "Paid"
+msgstr ""
+
+#: src/Admin/OrderBox.php:204
+msgid "Draft"
+msgstr ""
+
+#: src/Admin/OrderBox.php:205
+msgid "Cancelled"
+msgstr ""
+
+#: src/Admin/OrderBox.php:206
+msgid "Overdue"
+msgstr ""
+
+#: src/Admin/OrderBox.php:207
+msgid "Issued"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:66
+msgid "Settings"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:151
@@ -133,6 +199,116 @@ msgstr ""
 msgid "Webhook secret"
 msgstr ""
 
-#: src/Api/Client.php:85
+#: src/Admin/SettingsPage.php:272
+msgid "Documents"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:273
+msgid "Card and gateway payments get an invoice right away, cash on delivery when the order is completed, refunds a credit note. A document whose total in Denár differs from the order stays a draft for you to check."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:277
+msgid "Send orders to Denár"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:278
+msgid "Issue documents for orders automatically"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:284
+msgid "Bank transfer"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:285
+msgid "Issue a proforma with PAY by square when the order is placed; the invoice follows once Denár pairs the payment"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:291
+msgid "Number series"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:294
+msgid "default"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:295
+msgid "Code of a number series from Denár -> Settings -> Number series. Empty = the series set on the API key, or the default one."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:299
+msgid "EU reverse charge"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:303
+msgid "Goods to another EU member state"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:304
+msgid "Services to another EU member state"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:306
+msgid "Used when the order was placed without VAT because of a verified EU VAT id."
+msgstr ""
+
+#: src/Api/Client.php:127
 msgid "The Denár API key is not set."
+msgstr ""
+
+#. translators: %s: order number
+#: src/Sync/OrderData.php:68
+#, php-format
+msgid "Order no. %s"
+msgstr ""
+
+#. translators: %s: order number
+#: src/Sync/OrderData.php:125
+#, php-format
+msgid "Refund for order no. %s"
+msgstr ""
+
+#. translators: %s: document number
+#: src/Sync/OrderSync.php:201
+#, php-format
+msgid "Denár: proforma %s issued."
+msgstr ""
+
+#. translators: %s: document number
+#: src/Sync/OrderSync.php:267
+#, php-format
+msgid "Denár: invoice %s issued and marked paid."
+msgstr ""
+
+#. translators: %s: document number
+#: src/Sync/OrderSync.php:296
+#, php-format
+msgid "Denár: proforma %s cancelled."
+msgstr ""
+
+#: src/Sync/OrderSync.php:323
+msgid "Denár: refund without an issued invoice - no credit note created."
+msgstr ""
+
+#. translators: %s: document number
+#: src/Sync/OrderSync.php:339
+#, php-format
+msgid "Denár: credit note %s issued."
+msgstr ""
+
+#. translators: %s: document number
+#: src/Sync/OrderSync.php:369
+#, php-format
+msgid "Denár: payment of proforma %s received."
+msgstr ""
+
+#. translators: 1: Denár total, 2: shop total
+#: src/Sync/OrderSync.php:449
+#, php-format
+msgid "Denár: the draft total %1$s differs from the shop total %2$s (rounding of prices with VAT). The draft was not issued - check it in Denár."
+msgstr ""
+
+#. translators: %s: error message
+#: src/Sync/OrderSync.php:511
+#, php-format
+msgid "Denár: %s"
 msgstr ""

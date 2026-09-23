@@ -7,7 +7,9 @@
 
 namespace Denar\WooCommerce;
 
+use Denar\WooCommerce\Admin\OrderBox;
 use Denar\WooCommerce\Admin\SettingsPage;
+use Denar\WooCommerce\Sync\OrderSync;
 use Denar\WooCommerce\Webhook\Receiver;
 
 defined( 'ABSPATH' ) || exit;
@@ -27,6 +29,11 @@ final class Plugin {
 
 		SettingsPage::register();
 		Receiver::register();
+		OrderSync::register();
+
+		if ( is_admin() ) {
+			OrderBox::register();
+		}
 	}
 
 	/**

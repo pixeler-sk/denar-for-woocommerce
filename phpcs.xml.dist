@@ -15,7 +15,7 @@
     </rule>
     <rule ref="WordPress.WP.Capabilities">
         <properties>
-            <property name="custom_capabilities" type="array" value="manage_woocommerce"/>
+            <property name="custom_capabilities" type="array" value="manage_woocommerce,edit_shop_orders"/>
         </properties>
     </rule>
     <rule ref="WordPress.WP.I18n">

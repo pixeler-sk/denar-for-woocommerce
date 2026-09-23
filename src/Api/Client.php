@@ -71,16 +71,58 @@ final class Client {
 	}
 
 	/**
+	 * PATCH request with a JSON body.
+	 *
+	 * @param string $path Path starting with a slash.
+	 * @param array  $body Payload.
+	 */
+	public function patch( string $path, array $body ): array {
+		return $this->request( 'PATCH', $path, array(), $body );
+	}
+
+	/**
+	 * DELETE request.
+	 *
+	 * @param string $path Path starting with a slash.
+	 */
+	public function delete( string $path ): void {
+		$this->request( 'DELETE', $path );
+	}
+
+	/**
+	 * Document by its external_reference, or null.
+	 *
+	 * @param string $reference External reference.
+	 */
+	public function find_document( string $reference ): ?array {
+		$found = $this->get( '/documents', array( 'external_reference' => $reference ) );
+
+		return $found['data'][0] ?? null;
+	}
+
+	/**
+	 * PDF of a document (binary body).
+	 *
+	 * @param int $id Document id.
+	 *
+	 * @throws ApiException On a transport error or a non-2xx status.
+	 */
+	public function pdf( int $id ): string {
+		return $this->request( 'GET', '/documents/' . $id . '/pdf', array(), null, true )['body'];
+	}
+
+	/**
 	 * Sends the request and decodes the JSON answer.
 	 *
 	 * @param string     $method HTTP method.
 	 * @param string     $path   Path starting with a slash.
 	 * @param array      $query  Query parameters.
 	 * @param array|null $body   JSON payload.
+	 * @param bool       $raw    Return the raw body as ['body' => ...] instead of decoding JSON.
 	 *
 	 * @throws ApiException On a transport error or a non-2xx status.
 	 */
-	private function request( string $method, string $path, array $query = array(), ?array $body = null ): array {
+	private function request( string $method, string $path, array $query = array(), ?array $body = null, bool $raw = false ): array {
 		if ( '' === $this->api_key ) {
 			throw new ApiException( __( 'The Denár API key is not set.', 'denar-for-woocommerce' ), 401, 'missing_key' );
 		}
@@ -96,7 +138,7 @@ final class Client {
 			'redirection' => 0,
 			'headers'     => array(
 				'Authorization' => 'Bearer ' . $this->api_key,
-				'Accept'        => 'application/json',
+				'Accept'        => $raw ? 'application/pdf, application/json' : 'application/json',
 				'User-Agent'    => 'denar-for-woocommerce/' . DENAR_WC_VERSION . '; ' . home_url( '/' ),
 			),
 		);
@@ -112,7 +154,12 @@ final class Client {
 			throw new ApiException( $response->get_error_message() );
 		}
 
-		$status  = (int) wp_remote_retrieve_response_code( $response );
+		$status = (int) wp_remote_retrieve_response_code( $response );
+
+		if ( $raw && $status >= 200 && $status < 300 ) {
+			return array( 'body' => (string) wp_remote_retrieve_body( $response ) );
+		}
+
 		$decoded = json_decode( (string) wp_remote_retrieve_body( $response ), true );
 		$decoded = is_array( $decoded ) ? $decoded : array();
 

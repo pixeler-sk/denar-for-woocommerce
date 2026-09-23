@@ -266,6 +266,49 @@ final class SettingsPage {
 				'type' => 'sectionend',
 				'id'   => 'denar_wc_webhook',
 			),
+			array(
+				'type'  => 'title',
+				'id'    => 'denar_wc_documents',
+				'title' => __( 'Documents', 'denar-for-woocommerce' ),
+				'desc'  => __( 'Card and gateway payments get an invoice right away, cash on delivery when the order is completed, refunds a credit note. A document whose total in Denár differs from the order stays a draft for you to check.', 'denar-for-woocommerce' ),
+			),
+			array(
+				'id'      => Settings::OPTION_ENABLED,
+				'title'   => __( 'Send orders to Denár', 'denar-for-woocommerce' ),
+				'desc'    => __( 'Issue documents for orders automatically', 'denar-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'default' => 'yes',
+			),
+			array(
+				'id'      => Settings::OPTION_BACS_PROFORMA,
+				'title'   => __( 'Bank transfer', 'denar-for-woocommerce' ),
+				'desc'    => __( 'Issue a proforma with PAY by square when the order is placed; the invoice follows once Denár pairs the payment', 'denar-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'default' => 'yes',
+			),
+			array(
+				'id'          => Settings::OPTION_NUMBER_SERIES,
+				'title'       => __( 'Number series', 'denar-for-woocommerce' ),
+				'type'        => 'text',
+				'default'     => '',
+				'placeholder' => __( 'default', 'denar-for-woocommerce' ),
+				'desc_tip'    => __( 'Code of a number series from Denár -> Settings -> Number series. Empty = the series set on the API key, or the default one.', 'denar-for-woocommerce' ),
+			),
+			array(
+				'id'       => Settings::OPTION_REVERSE_CHARGE,
+				'title'    => __( 'EU reverse charge', 'denar-for-woocommerce' ),
+				'type'     => 'select',
+				'default'  => 'eu_goods',
+				'options'  => array(
+					'eu_goods'   => __( 'Goods to another EU member state', 'denar-for-woocommerce' ),
+					'eu_service' => __( 'Services to another EU member state', 'denar-for-woocommerce' ),
+				),
+				'desc_tip' => __( 'Used when the order was placed without VAT because of a verified EU VAT id.', 'denar-for-woocommerce' ),
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'denar_wc_documents',
+			),
 		);
 	}
 }

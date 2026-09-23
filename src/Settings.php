@@ -26,6 +26,16 @@ final class Settings {
 
 	public const OPTION_CONNECTION = 'denar_wc_connection';
 
+	public const OPTION_ENABLED = 'denar_wc_enabled';
+
+	public const OPTION_BACS_PROFORMA = 'denar_wc_bacs_proforma';
+
+	public const OPTION_NUMBER_SERIES = 'denar_wc_number_series';
+
+	public const OPTION_REVERSE_CHARGE = 'denar_wc_reverse_charge_regime';
+
+	public const OPTION_SITE_KEY = 'denar_wc_site_key';
+
 	/**
 	 * Base URL of the API without a trailing slash.
 	 */
@@ -47,6 +57,52 @@ final class Settings {
 	 */
 	public static function webhook_secret(): string {
 		return trim( self::constant( 'DENAR_WC_WEBHOOK_SECRET' ) ?? (string) get_option( self::OPTION_WEBHOOK_SECRET, '' ) );
+	}
+
+	/**
+	 * Whether orders are sent to Denár automatically (needs an API key).
+	 */
+	public static function enabled(): bool {
+		return 'no' !== get_option( self::OPTION_ENABLED, 'yes' ) && '' !== self::api_key();
+	}
+
+	/**
+	 * Bank transfer: proforma with PAY by square first (yes), or only the
+	 * invoice once the payment arrives (no).
+	 */
+	public static function bacs_proforma(): bool {
+		return 'no' !== get_option( self::OPTION_BACS_PROFORMA, 'yes' );
+	}
+
+	/**
+	 * Number series code in Denár, '' = the one of the API key / default.
+	 */
+	public static function number_series(): string {
+		return trim( (string) get_option( self::OPTION_NUMBER_SERIES, '' ) );
+	}
+
+	/**
+	 * Denár VAT regime for EU reverse charge: eu_goods or eu_service.
+	 */
+	public static function reverse_charge_regime(): string {
+		return 'eu_service' === get_option( self::OPTION_REVERSE_CHARGE ) ? 'eu_service' : 'eu_goods';
+	}
+
+	/**
+	 * Stable key of this shop inside external references (`woo:<key>:<order id>`).
+	 * Fixed at first use so a later domain change does not break idempotency;
+	 * several shops can feed one Denár organization.
+	 */
+	public static function site_key(): string {
+		$key = (string) get_option( self::OPTION_SITE_KEY, '' );
+
+		if ( '' === $key ) {
+			$key = (string) wp_parse_url( home_url(), PHP_URL_HOST );
+			$key = '' !== $key ? strtolower( $key ) : 'shop';
+			update_option( self::OPTION_SITE_KEY, $key, false );
+		}
+
+		return $key;
 	}
 
 	/**

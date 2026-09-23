@@ -1,0 +1,133 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Denár for WooCommerce 0.1.0\n"
+"Language: sk_SK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Domain: denar-for-woocommerce\n"
+
+
+#. Plugin Name of the plugin
+#: denar-for-woocommerce.php
+msgid "Denár for WooCommerce"
+msgstr "Denár pre WooCommerce"
+
+#. Plugin URI of the plugin
+#: denar-for-woocommerce.php
+msgid "https://denar.sk/"
+msgstr ""
+
+#. Description of the plugin
+#: denar-for-woocommerce.php
+msgid "Issues invoices for WooCommerce orders in Denár - proforma with PAY by square for bank transfers, invoice once paid, credit note on refund."
+msgstr "Vystavuje doklady k objednávkam WooCommerce v Denári - pri prevode zálohovú faktúru s PAY by square, po úhrade faktúru, pri vrátení peňazí dobropis."
+
+#. Author of the plugin
+#: denar-for-woocommerce.php
+msgid "Pixeler"
+msgstr ""
+
+#. Author URI of the plugin
+#: denar-for-woocommerce.php
+msgid "https://pixeler.sk/"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:55
+msgid "Denár"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:66
+msgid "Settings"
+msgstr "Nastavenia"
+
+#: src/Admin/SettingsPage.php:117
+msgid "You are not allowed to do this."
+msgstr "Na túto akciu nemáte oprávnenie."
+
+#: src/Admin/SettingsPage.php:151
+msgid "Connection to Denár"
+msgstr "Spojenie s Denárom"
+
+#: src/Admin/SettingsPage.php:154
+msgid "Not checked yet. Save the API key and check the connection."
+msgstr "Zatiaľ neoverené. Uložte API kľúč a overte spojenie."
+
+#. translators: 1: organization name, 2: IČO, 3: VAT payer yes/no
+#: src/Admin/SettingsPage.php:162
+#, php-format
+msgid "Connected to %1$s (IČO %2$s, VAT payer: %3$s)."
+msgstr "Pripojené k %1$s (IČO %2$s, platiteľ DPH: %3$s)."
+
+#: src/Admin/SettingsPage.php:165
+msgid "yes"
+msgstr "áno"
+
+#: src/Admin/SettingsPage.php:165
+msgid "no"
+msgstr "nie"
+
+#. translators: %s: list of scopes
+#: src/Admin/SettingsPage.php:173
+#, php-format
+msgid "The key is missing permissions: %s. Create a new key in Denár with them."
+msgstr "Kľúču chýbajú oprávnenia: %s. V Denári vytvorte nový kľúč, ktorý ich má."
+
+#. translators: %s: error message from the API
+#: src/Admin/SettingsPage.php:182
+#, php-format
+msgid "Connection failed: %s"
+msgstr "Spojenie zlyhalo: %s"
+
+#. translators: %s: date and time
+#: src/Admin/SettingsPage.php:192
+#, php-format
+msgid "Checked: %s"
+msgstr "Overené: %s"
+
+#: src/Admin/SettingsPage.php:202
+msgid "Check connection"
+msgstr "Overiť spojenie"
+
+#: src/Admin/SettingsPage.php:211
+msgid "Stored - leave empty to keep it."
+msgstr "Uložený - nechajte prázdne, ak ho nemeníte."
+
+#: src/Admin/SettingsPage.php:212
+msgid "Set in wp-config.php."
+msgstr "Nastavené vo wp-config.php."
+
+#: src/Admin/SettingsPage.php:218
+msgid "Create the API key in Denár under Settings -> API keys with the scopes documents and partners (read and write)."
+msgstr "API kľúč vytvorte v Denári v Nastavenia -> API kľúče s oprávneniami doklady a partneri (čítanie aj zápis)."
+
+#: src/Admin/SettingsPage.php:222
+msgid "API URL"
+msgstr "Adresa API"
+
+#: src/Admin/SettingsPage.php:226
+msgid "Leave empty for the production Denár. Change only for staging or local development."
+msgstr "Pre ostrý Denár nechajte prázdne. Meňte len pre staging alebo lokálny vývoj."
+
+#: src/Admin/SettingsPage.php:231
+msgid "API key"
+msgstr "API kľúč"
+
+#: src/Admin/SettingsPage.php:247
+msgid "Webhook"
+msgstr "Webhook"
+
+#. translators: %s: webhook URL
+#: src/Admin/SettingsPage.php:250
+#, php-format
+msgid "In Denár under Settings -> Webhooks add the URL %s with the events document.paid and document.cancelled, then paste its secret here."
+msgstr "V Denári v Nastavenia -> Webhooky pridajte adresu %s s udalosťami document.paid a document.cancelled a jej tajný kľúč vložte sem."
+
+#: src/Admin/SettingsPage.php:256
+msgid "Webhook secret"
+msgstr "Tajný kľúč webhooku"
+
+#: src/Api/Client.php:85
+msgid "The Denár API key is not set."
+msgstr "API kľúč Denára nie je nastavený."

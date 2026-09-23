@@ -27,6 +27,13 @@ final class Updater {
 	public const SLUG = 'denar-for-woocommerce';
 
 	/**
+	 * Icon and banner, same files and names as on wordpress.org
+	 * (rendered by assets-src/render.sh). Served from the main branch, so a
+	 * new picture needs no release.
+	 */
+	private const ASSETS = 'https://raw.githubusercontent.com/pixeler-sk/denar-for-woocommerce/main/.wordpress-org/';
+
+	/**
 	 * Hooked on init.
 	 */
 	public static function register(): void {
@@ -50,5 +57,22 @@ final class Updater {
 		// version-named namespace (v5p7), a full `use` would break on upgrade.
 		$api = $checker->getVcsApi();
 		$api->enableReleaseAssets( '/^denar-for-woocommerce-\d+\.\d+\.\d+\.zip$/', $api::REQUIRE_RELEASE_ASSETS );
+
+		// Icon in Dashboard -> Updates, banner in "View details".
+		$checker->addResultFilter(
+			static function ( $info ) {
+				$info->icons   = array(
+					'1x'  => self::ASSETS . 'icon-128x128.png',
+					'2x'  => self::ASSETS . 'icon-256x256.png',
+					'svg' => self::ASSETS . 'icon.svg',
+				);
+				$info->banners = array(
+					'low'  => self::ASSETS . 'banner-772x250.png',
+					'high' => self::ASSETS . 'banner-1544x500.png',
+				);
+
+				return $info;
+			}
+		);
 	}
 }

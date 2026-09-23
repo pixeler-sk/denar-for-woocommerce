@@ -1,0 +1,42 @@
+/* Shared look of the plugin assets - the dark "pre vývojárov" variant of the
+   denar.sk OG images (resources/css/marketing.css in Denár). */
+
+@font-face { font-family: 'Lexend Deca'; font-weight: 400; src: url(fonts/lexend-deca-latin-ext-400-normal.woff2) format('woff2'); unicode-range: U+0100-024F; }
+@font-face { font-family: 'Lexend Deca'; font-weight: 400; src: url(fonts/lexend-deca-latin-400-normal.woff2) format('woff2'); unicode-range: U+0000-00FF; }
+@font-face { font-family: 'Lexend Deca'; font-weight: 500; src: url(fonts/lexend-deca-latin-ext-500-normal.woff2) format('woff2'); unicode-range: U+0100-024F; }
+@font-face { font-family: 'Lexend Deca'; font-weight: 500; src: url(fonts/lexend-deca-latin-500-normal.woff2) format('woff2'); unicode-range: U+0000-00FF; }
+@font-face { font-family: 'Lexend Deca'; font-weight: 600; src: url(fonts/lexend-deca-latin-ext-600-normal.woff2) format('woff2'); unicode-range: U+0100-024F; }
+@font-face { font-family: 'Lexend Deca'; font-weight: 600; src: url(fonts/lexend-deca-latin-600-normal.woff2) format('woff2'); unicode-range: U+0000-00FF; }
+@font-face { font-family: 'Lexend Deca'; font-weight: 700; src: url(fonts/lexend-deca-latin-ext-700-normal.woff2) format('woff2'); unicode-range: U+0100-024F; }
+@font-face { font-family: 'Lexend Deca'; font-weight: 700; src: url(fonts/lexend-deca-latin-700-normal.woff2) format('woff2'); unicode-range: U+0000-00FF; }
+
+:root {
+    --ink: #151c2b;
+    --ink-2: #1b2436;
+    --text-on-dark: #c6ccd8;
+    --muted-on-dark: #8a92a3;
+    --sky: #6aa9f2;
+    --blue: #1f5fb8;
+    --green: #3fbf6f;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { width: 100%; height: 100%; overflow: hidden; }
+
+body {
+    position: relative;
+    font-family: 'Lexend Deca', system-ui, sans-serif;
+    color: #fff;
+    background:
+        radial-gradient(60% 90% at 100% 0%, rgba(58, 98, 158, 0.55), transparent 70%),
+        radial-gradient(45% 70% at 0% 100%, rgba(58, 62, 120, 0.45), transparent 70%),
+        linear-gradient(135deg, var(--ink) 0%, var(--ink-2) 100%);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Denár wordmark, dark variant: the acute over "á" is the coin. */
+.logo { display: inline-flex; align-items: baseline; font-weight: 700; line-height: 1; letter-spacing: -0.02em; color: #f2f5fa; }
+.logo-a { position: relative; display: inline-block; }
+.logo-coin { position: absolute; left: 50%; top: -0.06em; display: flex; width: 0.5em; margin-left: -0.25em; }
+.logo-coin svg { width: 100%; height: auto; transform: rotate(-25deg); }

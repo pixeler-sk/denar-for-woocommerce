@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- Plugin icon: the Denár coin (the acute over "á" in the wordmark) on the dark brand background. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#151c2b"/>
+      <stop offset="1" stop-color="#1b2436"/>
+    </linearGradient>
+    <radialGradient id="glow-tr" cx="1" cy="0" r="0.9">
+      <stop offset="0" stop-color="#3a629e" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#3a629e" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow-bl" cx="0" cy="1" r="0.75">
+      <stop offset="0" stop-color="#3a3e78" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#3a3e78" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="coin-face" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9cc8ff"/>
+      <stop offset="1" stop-color="#6aa9f2"/>
+    </linearGradient>
+    <linearGradient id="coin-edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1e4f92"/>
+      <stop offset="0.5" stop-color="#2f6fc4"/>
+      <stop offset="1" stop-color="#1e4f92"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" fill="url(#bg)"/>
+  <rect width="256" height="256" fill="url(#glow-tr)"/>
+  <rect width="256" height="256" fill="url(#glow-bl)"/>
+  <g transform="translate(128 132) rotate(-25) scale(4.6) translate(-22 -14)">
+    <path d="M2 11v6a20 10 0 0 0 40 0v-6a20 10 0 0 1 -40 0z" fill="url(#coin-edge)"/>
+    <ellipse cx="22" cy="11" rx="20" ry="10" fill="url(#coin-face)"/>
+    <ellipse cx="22" cy="11" rx="20" ry="10" fill="none" stroke="#e3efff" stroke-width="0.9" stroke-opacity="0.85"/>
+    <ellipse cx="22" cy="11" rx="15.5" ry="7.6" fill="#5c9be8"/>
+    <ellipse cx="22" cy="11" rx="15.5" ry="7.6" fill="none" stroke="#e3efff" stroke-width="1.1" stroke-opacity="0.9"/>
+    <path d="M8 8.5a15 7 0 0 1 20-5.5" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.9"/>
+  </g>
+</svg>

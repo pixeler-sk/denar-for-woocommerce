@@ -27,4 +27,9 @@ API URL `https://api.denar.test/v1`, kľúč z Testovacej firmy (public_id 67945
 Webhooky z lokálneho Denáru na lokálny WP potrebujú v Denári
 `WEBHOOK_ALLOW_INSECURE=true`.
 
+Ikona a banner: zdroje v `assets-src/` (HTML/SVG v štýle denar.sk, písmo
+Lexend Deca), `assets-src/render.sh` ich cez headless Chrome vyrenderuje do
+`.wordpress-org/` (názvy podľa wordpress.org). Aktualizácie ich berú z vetvy
+`main`, nová grafika teda nepotrebuje release.
+
 Vydanie: [RELEASING.md](RELEASING.md).

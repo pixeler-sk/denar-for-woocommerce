@@ -65,3 +65,37 @@ oprávnení len na čítanie verejných repozitárov:
 ```php
 define( 'DENAR_WC_GITHUB_TOKEN', '...' );
 ```
+
+## Dve distribúcie: GitHub a wordpress.org
+
+`bin/build.sh <github|wporg> <verzia>` zostaví obe, release workflow priloží
+k releasu oba zipy:
+
+| | GitHub (`denar-for-woocommerce-X.Y.Z.zip`) | wordpress.org (`…-wporg-X.Y.Z.zip`) |
+|---|---|---|
+| aktualizácie | Plugin Update Checker (`lib/`, `src/SelfHosted.php`) | WordPress sám; updater je tam zakázaný (guideline 8) |
+| preklad | pribalený `languages/*.mo` | language pack z translate.wordpress.org |
+
+Všetko, čo wordpress.org nesmie dostať, patrí do `src/SelfHosted.php` -
+build ho vyhodí a hlavný súbor ho volá len cez `class_exists`. CI na každý push
+pustí oficiálny Plugin Check nad wporg buildom.
+
+Názov pluginu musí zostať **„Denár for WooCommerce"** (hlavička aj readme) -
+„WooCommerce" je chránená značka, povolený je len tvar „… for WooCommerce".
+Slovenský „Denár pre WooCommerce" ide cez preklad.
+
+### Prvé podanie na wordpress.org
+
+1. Účet Pixeler na wordpress.org (2FA); jeho meno doplniť do `Contributors:`
+   v readme.txt.
+2. Denár musí mať verejnú registráciu - recenzent si službu musí vedieť skúsiť.
+3. Plugin musí niečo robiť (nie len kostra).
+4. Nahrať `…-wporg-X.Y.Z.zip` na https://wordpress.org/plugins/developers/add/.
+5. Po schválení: v GitHub repo nastaviť premennú `WPORG_DEPLOY=true` a secrets
+   `SVN_USERNAME` / `SVN_PASSWORD` (SVN heslo z profilu wordpress.org). Odvtedy
+   tag nasadí aj do SVN (kód aj `.wordpress-org/` grafiku).
+6. `languages/denar-for-woocommerce-sk_SK.po` importovať na
+   translate.wordpress.org (sk_SK), aby slovenčina išla aj z language packu.
+
+Weby s GitHub verziou po zverejnení dostanú aktualizácie aj z wordpress.org
+(rovnaký slug); PUC aj WordPress ponúknu tú istú verziu.

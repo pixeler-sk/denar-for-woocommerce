@@ -21,8 +21,6 @@ final class Plugin {
 	 * Hooked on plugins_loaded.
 	 */
 	public static function boot(): void {
-		load_plugin_textdomain( 'denar-for-woocommerce', false, dirname( plugin_basename( DENAR_WC_FILE ) ) . '/languages' );
-
 		if ( ! class_exists( 'WooCommerce' ) ) {
 			return;
 		}

@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Denár pre WooCommerce
+ * Plugin Name: Denár for WooCommerce
  * Plugin URI: https://denar.sk/
  * Description: Issues invoices for WooCommerce orders in Denár - proforma with PAY by square for bank transfers, invoice once paid, credit note on refund.
- * Version: 0.1.1
+ * Version: 0.1.2
  * Author: Pixeler
  * Author URI: https://pixeler.sk/
  * Requires at least: 6.5
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DENAR_WC_VERSION', '0.1.1' );
+define( 'DENAR_WC_VERSION', '0.1.2' );
 define( 'DENAR_WC_FILE', __FILE__ );
 define( 'DENAR_WC_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -37,9 +37,11 @@ spl_autoload_register(
 	}
 );
 
-// Outside the WooCommerce check on purpose: the plugin must stay updatable
-// even while WooCommerce is deactivated.
-add_action( 'init', array( Denar\WooCommerce\Updater::class, 'register' ) );
+// GitHub distribution only (updates + bundled translation); the wordpress.org
+// build leaves the class out, the autoloader then finds nothing.
+if ( class_exists( Denar\WooCommerce\SelfHosted::class ) ) {
+	Denar\WooCommerce\SelfHosted::boot();
+}
 
 add_action(
 	'before_woocommerce_init',

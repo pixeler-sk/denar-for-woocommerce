@@ -1,12 +1,12 @@
 <?php
 /**
- * Automatic updates from GitHub releases.
+ * Everything the GitHub distribution needs and wordpress.org forbids.
  *
- * Same scheme as px-shop-core: the public repository
- * https://github.com/pixeler-sk/denar-for-woocommerce, a tag builds a zip in
- * CI and attaches it to a release, Plugin Update Checker offers it in
- * Dashboard -> Updates. Only the CI-built zip is accepted
- * (REQUIRE_RELEASE_ASSETS), never the raw source archive. See RELEASING.md.
+ * This file and lib/ are left out of the wordpress.org build (bin/build.sh
+ * wporg): there WordPress itself delivers updates and translations come from
+ * translate.wordpress.org. Here the plugin updates from GitHub releases - a
+ * tag builds a zip in CI, Plugin Update Checker offers it in Dashboard ->
+ * Updates - and loads its bundled translation. See RELEASING.md.
  *
  * @package DenarForWooCommerce
  */
@@ -18,9 +18,9 @@ use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Plugin Update Checker wiring.
+ * GitHub distribution: bundled translation and Plugin Update Checker.
  */
-final class Updater {
+final class SelfHosted {
 
 	public const REPOSITORY = 'https://github.com/pixeler-sk/denar-for-woocommerce/';
 
@@ -34,9 +34,26 @@ final class Updater {
 	private const ASSETS = 'https://raw.githubusercontent.com/pixeler-sk/denar-for-woocommerce/main/.wordpress-org/';
 
 	/**
-	 * Hooked on init.
+	 * Called from the main file, before plugins_loaded.
 	 */
-	public static function register(): void {
+	public static function boot(): void {
+		add_action( 'plugins_loaded', array( self::class, 'load_textdomain' ), 5 );
+		// Outside the WooCommerce check on purpose: the plugin must stay
+		// updatable even while WooCommerce is deactivated.
+		add_action( 'init', array( self::class, 'register_updater' ) );
+	}
+
+	/**
+	 * Bundled translation; on wordpress.org the language pack replaces it.
+	 */
+	public static function load_textdomain(): void {
+		load_plugin_textdomain( 'denar-for-woocommerce', false, dirname( plugin_basename( DENAR_WC_FILE ) ) . '/languages' );
+	}
+
+	/**
+	 * Wires Plugin Update Checker.
+	 */
+	public static function register_updater(): void {
 		// Updates are checked only in admin, cron and WP-CLI.
 		if ( ! is_admin() && ! wp_doing_cron() && ! ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			return;
@@ -55,6 +72,7 @@ final class Updater {
 
 		// Constant read from the instance: the Api class lives in a
 		// version-named namespace (v5p7), a full `use` would break on upgrade.
+		// Only the CI-built zip is accepted, never the raw source archive.
 		$api = $checker->getVcsApi();
 		$api->enableReleaseAssets( '/^denar-for-woocommerce-\d+\.\d+\.\d+\.zip$/', $api::REQUIRE_RELEASE_ASSETS );
 

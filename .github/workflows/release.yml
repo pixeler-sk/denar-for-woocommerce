@@ -52,33 +52,12 @@ jobs:
 
           exit $fail
 
-      - name: Zostav zip
+      - name: Zostav zipy (GitHub a wordpress.org)
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          # Zip musí mať na vrchu priečinok pomenovaný ako slug pluginu, inak by
-          # WordPress rozbalil aktualizáciu vedľa pôvodného priečinka.
-          mkdir -p build/denar-for-woocommerce
-          rsync -a ./ build/denar-for-woocommerce/ \
-            --exclude '/.git' \
-            --exclude '/.github' \
-            --exclude '/build' \
-            --exclude '/.gitignore' \
-            --exclude '/.gitattributes' \
-            --exclude '/CLAUDE.md' \
-            --exclude '/RELEASING.md' \
-            --exclude '/README.md' \
-            --exclude '/vendor' \
-            --exclude '/tests' \
-            --exclude '/composer.json' \
-            --exclude '/composer.lock' \
-            --exclude '/phpunit.xml.dist' \
-            --exclude '/phpcs.xml.dist' \
-            --exclude '/.phpunit.cache' \
-            --exclude '/.wordpress-org' \
-            --exclude '/assets-src'
-
-          cd build && zip -rq "denar-for-woocommerce-${VERSION}.zip" denar-for-woocommerce
+          bin/build.sh github "$VERSION"
+          bin/build.sh wporg "$VERSION"
 
       - name: Vytiahni changelog pre tento release
         env:
@@ -102,5 +81,20 @@ jobs:
         run: |
           gh release create "$GITHUB_REF_NAME" \
             "build/denar-for-woocommerce-${VERSION}.zip" \
+            "build/denar-for-woocommerce-wporg-${VERSION}.zip" \
             --title "$GITHUB_REF_NAME" \
             --notes-file release-notes.md
+
+      # Nasadenie do SVN wordpress.org. Zapne sa až po schválení pluginu:
+      # repo premenná WPORG_DEPLOY=true a secrets SVN_USERNAME / SVN_PASSWORD
+      # (heslo SVN z profilu na wordpress.org, nie heslo účtu).
+      - name: Nasaď na wordpress.org
+        if: vars.WPORG_DEPLOY == 'true'
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: denar-for-woocommerce
+          VERSION: ${{ steps.version.outputs.version }}
+          BUILD_DIR: build/wporg/denar-for-woocommerce
+          ASSETS_DIR: .wordpress-org

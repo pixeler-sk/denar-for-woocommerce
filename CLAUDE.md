@@ -11,4 +11,8 @@
 - Zdrojové texty anglicky, preklad `languages/denar-for-woocommerce-sk_SK.po`
   (po zmene textov: `wp i18n make-pot`, doplniť .po, `msgfmt`).
 - Testovať len proti Testovacej firme v Denári (public_id 67945997).
+- Dve distribúcie (GitHub s PUC, wordpress.org bez neho): `bin/build.sh`.
+  Kód, ktorý wordpress.org zakazuje (updater, vzdialené assety,
+  load_plugin_textdomain), len do `src/SelfHosted.php`. Názov zostáva
+  „Denár for WooCommerce" (ochranná známka).
 - Vydanie a verzia na 3 miestach: RELEASING.md.

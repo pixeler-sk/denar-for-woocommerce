@@ -21,3 +21,13 @@ jobs:
       - run: composer install --no-interaction --no-progress
       - run: vendor/bin/phpunit
       - run: vendor/bin/phpcs -q
+
+  # Oficiálna kontrola wordpress.org nad buildom, ktorý by sa tam nasadil.
+  plugin-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bin/build.sh wporg 0.0.0
+      - uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: build/wporg/denar-for-woocommerce

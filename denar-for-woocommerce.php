@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Denár for WooCommerce
+ * Plugin Name: Denár pre WooCommerce
  * Plugin URI: https://denar.sk/
  * Description: Issues invoices for WooCommerce orders in Denár - proforma with PAY by square for bank transfers, invoice once paid, credit note on refund.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: Pixeler
  * Author URI: https://pixeler.sk/
  * Requires at least: 6.5
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'DENAR_WC_VERSION', '0.1.0' );
+define( 'DENAR_WC_VERSION', '0.1.1' );
 define( 'DENAR_WC_FILE', __FILE__ );
 define( 'DENAR_WC_DIR', plugin_dir_path( __FILE__ ) );
 

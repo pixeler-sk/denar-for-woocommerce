@@ -1,11 +1,11 @@
-=== Denár for WooCommerce ===
+=== Denár pre WooCommerce ===
 Contributors: pixeler
 Tags: invoice, woocommerce, slovakia, pay by square, e-invoice
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,6 +35,11 @@ Credentials may also be defined in wp-config.php: `DENAR_WC_API_KEY`,
 `DENAR_WC_WEBHOOK_SECRET`, `DENAR_WC_API_URL`.
 
 == Changelog ==
+
+= 0.1.1 =
+* Icon and banner shown in Dashboard -> Updates and in the plugin details.
+* Plugin name in Slovak: Denár pre WooCommerce.
+* Tested up to WordPress 7.1.
 
 = 0.1.0 =
 * Plugin skeleton: settings, connection check, webhook endpoint with signature verification, updates from GitHub releases.

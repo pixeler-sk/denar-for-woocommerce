@@ -7,6 +7,8 @@
 
 namespace Denar\WooCommerce\Webhook;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Port of App\Support\WebhookSignature from Denár - keep them identical.
  * Header `X-Denar-Signature: t=<unix time>,v1=<hex HMAC-SHA256(secret, "<t>.<body>")>`.

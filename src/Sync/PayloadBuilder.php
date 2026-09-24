@@ -7,6 +7,8 @@
 
 namespace Denar\WooCommerce\Sync;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Pure mapping (no WordPress) from the plain order array collected by
  * OrderData to the body of POST /documents and POST /documents/{id}/credit-note.

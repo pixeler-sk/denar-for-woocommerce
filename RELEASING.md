@@ -1,8 +1,9 @@
 # Vydávanie a nasadzovanie
 
-Plugin nie je na wordpress.org. Distribuuje sa z verejného repozitára
-[pixeler-sk/denar-for-woocommerce](https://github.com/pixeler-sk/denar-for-woocommerce) a na
-klientskych weboch sa aktualizuje cez bežnú WordPress aktualizáciu.
+Plugin je na wordpress.org (https://wordpress.org/plugins/denar-for-woocommerce/,
+od 0.2.2, 1. 10. 2026) a zároveň v GitHub releasoch verejného repozitára
+[pixeler-sk/denar-for-woocommerce](https://github.com/pixeler-sk/denar-for-woocommerce).
+Tag nasadí obe distribúcie naraz (release workflow, krok SVN).
 
 ## Ako to funguje
 
@@ -93,7 +94,11 @@ Slovenský „Denár pre WooCommerce" ide cez preklad.
 4. Nahrať `…-wporg-X.Y.Z.zip` na https://wordpress.org/plugins/developers/add/.
 5. Po schválení: v GitHub repo nastaviť premennú `WPORG_DEPLOY=true` a secrets
    `SVN_USERNAME` / `SVN_PASSWORD` (SVN heslo z profilu wordpress.org). Odvtedy
-   tag nasadí aj do SVN (kód aj `.wordpress-org/` grafiku).
+   tag nasadí aj do SVN (kód aj `.wordpress-org/` grafiku). Hotovo 1. 10. 2026.
+   Heslo do secretu zo schránky bez nového riadku:
+   `pbpaste | tr -d '\r\n' | gh secret set SVN_PASSWORD`. Zlyhané nasadenie
+   (napr. `E215004 Authentication failed`) sa po oprave zopakuje `gh run rerun` -
+   existujúci GitHub release workflow preskočí.
 6. `languages/denar-for-woocommerce-sk_SK.po` importovať na
    translate.wordpress.org (sk_SK), aby slovenčina išla aj z language packu.
 

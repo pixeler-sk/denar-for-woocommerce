@@ -79,6 +79,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
+          # A rerun after a failed SVN deploy finds the release already there.
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            echo "Release $GITHUB_REF_NAME už existuje, preskakujem."
+            exit 0
+          fi
           gh release create "$GITHUB_REF_NAME" \
             "build/denar-for-woocommerce-${VERSION}.zip" \
             "build/denar-for-woocommerce-wporg-${VERSION}.zip" \

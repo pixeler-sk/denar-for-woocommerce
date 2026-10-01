@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,7 @@ orders and listens to webhooks.
 * Runs in the background (Action Scheduler) with retries - the checkout never waits for Denár.
 * Compatible with HPOS and the block checkout.
 
-A Denár account is required. Denár is in early access - request an account at [denar.sk](https://denar.sk/) (info@denar.sk).
+A Denár account with API access is required - plans Firma and Profi, and the free trial. Sign up at [denar.sk](https://denar.sk/cennik).
 
 == Installation ==
 
@@ -73,7 +73,7 @@ No. It is a connector - invoices are issued in Denár.
 
 = How do I get a Denár account? =
 
-Denár is in early access. Request an account at [denar.sk](https://denar.sk/) or info@denar.sk.
+Sign up at [denar.sk](https://denar.sk/cennik). New accounts start with a free trial that includes the API; afterwards the plugin needs a plan with API access (Firma or Profi).
 
 = My prices include VAT. Will the invoice match the order? =
 
@@ -84,6 +84,9 @@ Yes. The plugin sends the prices with VAT and Denár works the base out of them,
 WooCommerce -> Status -> Logs, source "denar". The API key is never logged.
 
 == Changelog ==
+
+= 0.2.2 =
+* Readme: Denár sign-up is open; which plans include the API.
 
 = 0.2.1 =
 * Every PHP file refuses direct access.

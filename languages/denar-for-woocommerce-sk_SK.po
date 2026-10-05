@@ -2,8 +2,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Denár for WooCommerce 0.2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/denar-for-woocommerce\n"
-"POT-Creation-Date: 2026-09-23T10:55:33+00:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/denar-for-"
+"woocommerce\n"
+"POT-Creation-Date: 2026-10-05T10:30:33+00:00\n"
 "Language: sk_SK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -176,10 +177,10 @@ msgstr "Nastavené vo wp-config.php."
 
 #: src/Admin/SettingsPage.php:218
 msgid ""
-"Create the API key in Denár under Settings -> API keys with the scopes "
+"Create the API key in Denár under Account -> API keys with the scopes "
 "documents and partners (read and write)."
 msgstr ""
-"API kľúč vytvorte v Denári v Nastavenia -> API kľúče s oprávneniami doklady "
+"API kľúč vytvorte v Denári v Účet -> API kľúče s oprávneniami doklady "
 "a partneri (čítanie aj zápis)."
 
 #: src/Admin/SettingsPage.php:222
@@ -205,10 +206,10 @@ msgstr "Webhook"
 #: src/Admin/SettingsPage.php:250
 #, php-format
 msgid ""
-"In Denár under Settings -> Webhooks add the URL %s with the events "
+"In Denár under Account -> Webhooks add the URL %s with the events "
 "document.paid and document.cancelled, then paste its secret here."
 msgstr ""
-"V Denári v Nastavenia -> Webhooky pridajte adresu %s s udalosťami "
+"V Denári v Účet -> Webhooky pridajte adresu %s s udalosťami "
 "document.paid a document.cancelled a jej tajný kľúč vložte sem."
 
 #: src/Admin/SettingsPage.php:256
@@ -226,8 +227,8 @@ msgid ""
 "Denár differs from the order stays a draft for you to check."
 msgstr ""
 "Platba kartou alebo bránou dostane faktúru hneď, dobierka pri vybavení "
-"objednávky, vrátenie peňazí dobropis. Doklad, ktorého suma v Denári nesedí s"
-" objednávkou, ostane konceptom na kontrolu."
+"objednávky, vrátenie peňazí dobropis. Doklad, ktorého suma v Denári nesedí s "
+"objednávkou, ostane konceptom na kontrolu."
 
 #: src/Admin/SettingsPage.php:277
 msgid "Send orders to Denár"
@@ -246,8 +247,8 @@ msgid ""
 "Issue a proforma with PAY by square when the order is placed; the invoice "
 "follows once Denár pairs the payment"
 msgstr ""
-"Pri objednávke vystaviť zálohovú faktúru s PAY by square; faktúra nasleduje,"
-" keď Denár spáruje úhradu"
+"Pri objednávke vystaviť zálohovú faktúru s PAY by square; faktúra nasleduje, "
+"keď Denár spáruje úhradu"
 
 #: src/Admin/SettingsPage.php:291
 msgid "Number series"
@@ -259,8 +260,8 @@ msgstr "predvolený"
 
 #: src/Admin/SettingsPage.php:295
 msgid ""
-"Code of a number series from Denár -> Settings -> Number series. Empty = the"
-" series set on the API key, or the default one."
+"Code of a number series from Denár -> Settings -> Number series. Empty = the "
+"series set on the API key, or the default one."
 msgstr ""
 "Kód číselného radu z Denár -> Nastavenia -> Číselné rady. Prázdne = rad "
 "nastavený pri API kľúči, inak predvolený."
@@ -287,13 +288,13 @@ msgid "The Denár API key is not set."
 msgstr "API kľúč Denára nie je nastavený."
 
 #. translators: %s: order number
-#: src/Sync/OrderData.php:68
+#: src/Sync/OrderData.php:80
 #, php-format
 msgid "Order no. %s"
 msgstr "Objednávka č. %s"
 
 #. translators: %s: order number
-#: src/Sync/OrderData.php:125
+#: src/Sync/OrderData.php:140
 #, php-format
 msgid "Refund for order no. %s"
 msgstr "Vrátenie platby k objednávke č. %s"
@@ -305,46 +306,46 @@ msgid "Denár: proforma %s issued."
 msgstr "Denár: vystavená zálohová faktúra %s."
 
 #. translators: %s: document number
-#: src/Sync/OrderSync.php:267
+#: src/Sync/OrderSync.php:273
 #, php-format
 msgid "Denár: invoice %s issued and marked paid."
 msgstr "Denár: vystavená faktúra %s, označená ako uhradená."
 
 #. translators: %s: document number
-#: src/Sync/OrderSync.php:296
+#: src/Sync/OrderSync.php:302
 #, php-format
 msgid "Denár: proforma %s cancelled."
 msgstr "Denár: zálohová faktúra %s stornovaná."
 
-#: src/Sync/OrderSync.php:323
+#: src/Sync/OrderSync.php:329
 msgid "Denár: refund without an issued invoice - no credit note created."
 msgstr ""
 "Denár: vrátenie peňazí bez vystavenej faktúry - dobropis sa nevytvoril."
 
 #. translators: %s: document number
-#: src/Sync/OrderSync.php:339
+#: src/Sync/OrderSync.php:345
 #, php-format
 msgid "Denár: credit note %s issued."
 msgstr "Denár: vystavený dobropis %s."
 
 #. translators: %s: document number
-#: src/Sync/OrderSync.php:369
+#: src/Sync/OrderSync.php:375
 #, php-format
 msgid "Denár: payment of proforma %s received."
 msgstr "Denár: prijatá úhrada zálohovej faktúry %s."
 
 #. translators: 1: Denár total, 2: shop total
-#: src/Sync/OrderSync.php:449
+#: src/Sync/OrderSync.php:465
 #, php-format
 msgid ""
 "Denár: the draft total %1$s differs from the shop total %2$s (rounding of "
 "prices with VAT). The draft was not issued - check it in Denár."
 msgstr ""
-"Denár: suma konceptu %1$s nesedí so sumou objednávky %2$s (zaokrúhlenie cien"
-" s DPH). Koncept sa nevystavil - skontrolujte ho v Denári."
+"Denár: suma konceptu %1$s nesedí so sumou objednávky %2$s (zaokrúhlenie cien "
+"s DPH). Koncept sa nevystavil - skontrolujte ho v Denári."
 
 #. translators: %s: error message
-#: src/Sync/OrderSync.php:511
+#: src/Sync/OrderSync.php:527
 #, php-format
 msgid "Denár: %s"
 msgstr "Denár: %s"

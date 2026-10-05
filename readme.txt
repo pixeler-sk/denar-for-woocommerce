@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
-Stable tag: 0.2.2
+Stable tag: 0.2.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,10 +35,10 @@ A Denár account with API access is required - plans Firma and Profi, and the fr
 == Installation ==
 
 1. Install and activate the plugin (WooCommerce must be active).
-2. In Denár create an API key (Settings -> API keys) with the scopes
+2. In Denár create an API key (Account -> API keys) with the scopes
    documents and partners, read and write.
 3. Paste it into WooCommerce -> Settings -> Denár and click Check connection.
-4. In Denár add a webhook (Settings -> Webhooks) to the URL shown on the
+4. In Denár add a webhook (Account -> Webhooks) to the URL shown on the
    settings screen and paste its secret into the plugin.
 
 Credentials may also be defined in wp-config.php: `DENAR_WC_API_KEY`,
@@ -84,6 +84,9 @@ Yes. The plugin sends the prices with VAT and Denár works the base out of them,
 WooCommerce -> Status -> Logs, source "denar". The API key is never logged.
 
 == Changelog ==
+
+= 0.2.3 =
+* API keys and webhooks are under Account in Denár, not Settings (readme and settings screen).
 
 = 0.2.2 =
 * Readme: Denár sign-up is open; which plans include the API.

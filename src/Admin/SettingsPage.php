@@ -215,7 +215,7 @@ final class SettingsPage {
 			array(
 				'type' => 'title',
 				'id'   => 'denar_wc_api',
-				'desc' => __( 'Create the API key in Denár under Settings -> API keys with the scopes documents and partners (read and write).', 'denar-for-woocommerce' ),
+				'desc' => __( 'Create the API key in Denár under Account -> API keys with the scopes documents and partners (read and write).', 'denar-for-woocommerce' ),
 			),
 			array(
 				'id'                => Settings::OPTION_API_URL,
@@ -247,7 +247,7 @@ final class SettingsPage {
 				'title' => __( 'Webhook', 'denar-for-woocommerce' ),
 				'desc'  => sprintf(
 					/* translators: %s: webhook URL */
-					__( 'In Denár under Settings -> Webhooks add the URL %s with the events document.paid and document.cancelled, then paste its secret here.', 'denar-for-woocommerce' ),
+					__( 'In Denár under Account -> Webhooks add the URL %s with the events document.paid and document.cancelled, then paste its secret here.', 'denar-for-woocommerce' ),
 					'<code>' . esc_html( Receiver::url() ) . '</code>'
 				),
 			),

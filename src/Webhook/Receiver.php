@@ -39,7 +39,7 @@ final class Receiver {
 	}
 
 	/**
-	 * Public URL to paste into Denár -> Settings -> Webhooks.
+	 * Public URL to paste into Denár -> Account -> Webhooks.
 	 */
 	public static function url(): string {
 		return rest_url( self::NAMESPACE . self::ROUTE );

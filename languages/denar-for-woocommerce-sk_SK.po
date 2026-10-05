@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Denár for WooCommerce 0.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/denar-for-"
 "woocommerce\n"
-"POT-Creation-Date: 2026-10-05T10:30:33+00:00\n"
+"POT-Creation-Date: 2026-10-05T11:35:31+00:00\n"
 "Language: sk_SK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -180,8 +180,8 @@ msgid ""
 "Create the API key in Denár under Account -> API keys with the scopes "
 "documents and partners (read and write)."
 msgstr ""
-"API kľúč vytvorte v Denári v Účet -> API kľúče s oprávneniami doklady "
-"a partneri (čítanie aj zápis)."
+"API kľúč vytvorte v Denári v Účet -> API kľúče s oprávneniami doklady a "
+"partneri (čítanie aj zápis)."
 
 #: src/Admin/SettingsPage.php:222
 msgid "API URL"
@@ -209,8 +209,8 @@ msgid ""
 "In Denár under Account -> Webhooks add the URL %s with the events "
 "document.paid and document.cancelled, then paste its secret here."
 msgstr ""
-"V Denári v Účet -> Webhooky pridajte adresu %s s udalosťami "
-"document.paid a document.cancelled a jej tajný kľúč vložte sem."
+"V Denári v Účet -> Webhooky pridajte adresu %s s udalosťami document.paid a "
+"document.cancelled a jej tajný kľúč vložte sem."
 
 #: src/Admin/SettingsPage.php:256
 msgid "Webhook secret"
@@ -260,10 +260,10 @@ msgstr "predvolený"
 
 #: src/Admin/SettingsPage.php:295
 msgid ""
-"Code of a number series from Denár -> Settings -> Number series. Empty = the "
+"Code of a number series from Denár -> Company -> Number series. Empty = the "
 "series set on the API key, or the default one."
 msgstr ""
-"Kód číselného radu z Denár -> Nastavenia -> Číselné rady. Prázdne = rad "
+"Kód číselného radu z Denár -> Firma -> Číselné rady. Prázdne = rad "
 "nastavený pri API kľúči, inak predvolený."
 
 #: src/Admin/SettingsPage.php:299

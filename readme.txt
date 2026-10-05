@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
-Stable tag: 0.2.3
+Stable tag: 0.2.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,6 +84,9 @@ Yes. The plugin sends the prices with VAT and Denár works the base out of them,
 WooCommerce -> Status -> Logs, source "denar". The API key is never logged.
 
 == Changelog ==
+
+= 0.2.4 =
+* Number series are under Company in Denár, not Settings (settings screen hint).
 
 = 0.2.3 =
 * API keys and webhooks are under Account in Denár, not Settings (readme and settings screen).

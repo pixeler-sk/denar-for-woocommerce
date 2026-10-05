@@ -292,7 +292,7 @@ final class SettingsPage {
 				'type'        => 'text',
 				'default'     => '',
 				'placeholder' => __( 'default', 'denar-for-woocommerce' ),
-				'desc_tip'    => __( 'Code of a number series from Denár -> Settings -> Number series. Empty = the series set on the API key, or the default one.', 'denar-for-woocommerce' ),
+				'desc_tip'    => __( 'Code of a number series from Denár -> Company -> Number series. Empty = the series set on the API key, or the default one.', 'denar-for-woocommerce' ),
 			),
 			array(
 				'id'       => Settings::OPTION_REVERSE_CHARGE,

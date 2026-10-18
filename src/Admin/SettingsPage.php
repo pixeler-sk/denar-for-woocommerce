@@ -287,6 +287,13 @@ final class SettingsPage {
 				'default' => 'yes',
 			),
 			array(
+				'id'      => Settings::OPTION_ATTACH_PDF,
+				'title'   => __( 'Invoice in e-mail', 'denar-for-woocommerce' ),
+				'desc'    => __( 'Attach the invoice PDF from Denár to the completed order e-mail (turn off a PDF invoice plugin, or the customer gets two invoices)', 'denar-for-woocommerce' ),
+				'type'    => 'checkbox',
+				'default' => 'yes',
+			),
+			array(
 				'id'          => Settings::OPTION_NUMBER_SERIES,
 				'title'       => __( 'Number series', 'denar-for-woocommerce' ),
 				'type'        => 'text',

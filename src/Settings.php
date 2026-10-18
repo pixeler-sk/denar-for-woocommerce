@@ -30,6 +30,8 @@ final class Settings {
 
 	public const OPTION_BACS_PROFORMA = 'denar_wc_bacs_proforma';
 
+	public const OPTION_ATTACH_PDF = 'denar_wc_attach_pdf';
+
 	public const OPTION_NUMBER_SERIES = 'denar_wc_number_series';
 
 	public const OPTION_REVERSE_CHARGE = 'denar_wc_reverse_charge_regime';
@@ -72,6 +74,13 @@ final class Settings {
 	 */
 	public static function bacs_proforma(): bool {
 		return 'no' !== get_option( self::OPTION_BACS_PROFORMA, 'yes' );
+	}
+
+	/**
+	 * Whether the invoice PDF from Denár goes with the completed-order e-mail.
+	 */
+	public static function attach_pdf(): bool {
+		return 'no' !== get_option( self::OPTION_ATTACH_PDF, 'yes' );
 	}
 
 	/**

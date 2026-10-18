@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Denár for WooCommerce 0.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/denar-for-"
 "woocommerce\n"
-"POT-Creation-Date: 2026-10-05T11:35:31+00:00\n"
+"POT-Creation-Date: 2026-10-17T14:11:21+00:00\n"
 "Language: sk_SK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -251,34 +251,46 @@ msgstr ""
 "keď Denár spáruje úhradu"
 
 #: src/Admin/SettingsPage.php:291
+msgid "Invoice in e-mail"
+msgstr "Faktúra v e-maile"
+
+#: src/Admin/SettingsPage.php:292
+msgid ""
+"Attach the invoice PDF from Denár to the completed order e-mail (turn off a "
+"PDF invoice plugin, or the customer gets two invoices)"
+msgstr ""
+"Priložiť PDF faktúry z Denára k e-mailu o vybavenej objednávke (vypnite plugin "
+"na PDF faktúry, inak zákazník dostane dve faktúry)"
+
+#: src/Admin/SettingsPage.php:298
 msgid "Number series"
 msgstr "Číselný rad"
 
-#: src/Admin/SettingsPage.php:294
+#: src/Admin/SettingsPage.php:301
 msgid "default"
 msgstr "predvolený"
 
-#: src/Admin/SettingsPage.php:295
+#: src/Admin/SettingsPage.php:302
 msgid ""
 "Code of a number series from Denár -> Company -> Number series. Empty = the "
 "series set on the API key, or the default one."
 msgstr ""
-"Kód číselného radu z Denár -> Firma -> Číselné rady. Prázdne = rad "
-"nastavený pri API kľúči, inak predvolený."
+"Kód číselného radu z Denár -> Firma -> Číselné rady. Prázdne = rad nastavený "
+"pri API kľúči, inak predvolený."
 
-#: src/Admin/SettingsPage.php:299
+#: src/Admin/SettingsPage.php:306
 msgid "EU reverse charge"
 msgstr "Prenesenie daňovej povinnosti v EÚ"
 
-#: src/Admin/SettingsPage.php:303
+#: src/Admin/SettingsPage.php:310
 msgid "Goods to another EU member state"
 msgstr "Tovar do iného členského štátu EÚ"
 
-#: src/Admin/SettingsPage.php:304
+#: src/Admin/SettingsPage.php:311
 msgid "Services to another EU member state"
 msgstr "Služby do iného členského štátu EÚ"
 
-#: src/Admin/SettingsPage.php:306
+#: src/Admin/SettingsPage.php:313
 msgid ""
 "Used when the order was placed without VAT because of a verified EU VAT id."
 msgstr "Použije sa, keď bola objednávka bez DPH pre overené IČ DPH z EÚ."

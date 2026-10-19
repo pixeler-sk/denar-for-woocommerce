@@ -4,8 +4,8 @@
  * Plugin URI: https://denar.sk/
  * Description: Issues invoices for WooCommerce orders in Denár - proforma with PAY by square for bank transfers, invoice once paid, credit note on refund.
  * Version: 0.2.5
- * Author: Pixeler
- * Author URI: https://pixeler.sk/
+ * Author: Pixeler s. r. o.
+ * Author URI: https://pixeler.sk
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Requires Plugins: woocommerce
@@ -13,6 +13,9 @@
  * License: GPL v2 or later
  * Text Domain: denar-for-woocommerce
  * Domain Path: /languages
+ * Tested up to: 7.1
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Update URI: https://github.com/pixeler-sk/denar-for-woocommerce
  *
  * @package DenarForWooCommerce
  */

@@ -205,6 +205,39 @@ final class SettingsPage {
 	}
 
 	/**
+	 * Order statuses an invoice may be issued at, slug (without "wc-") => name.
+	 * Unpaid, failed and closed-without-sale statuses are left out.
+	 */
+	private static function status_options(): array {
+		$options = array();
+		foreach ( wc_get_order_statuses() as $slug => $name ) {
+			$slug = preg_replace( '/^wc-/', '', (string) $slug );
+			if ( ! in_array( $slug, array( 'pending', 'on-hold', 'cancelled', 'refunded', 'failed', 'checkout-draft' ), true ) ) {
+				$options[ $slug ] = $name;
+			}
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Customer order e-mails, id => title (custom status e-mails included).
+	 * Account e-mails, the manual invoice (always attached) and e-mails of
+	 * orders that are not sold are left out.
+	 */
+	private static function email_options(): array {
+		$skip    = array( 'customer_invoice', 'customer_note', 'customer_reset_password', 'customer_new_account', 'customer_verify_email', 'customer_cancelled_order', 'customer_failed_order', 'customer_refunded_order', 'customer_pos_refunded_order' );
+		$options = array();
+		foreach ( WC()->mailer()->get_emails() as $email ) {
+			if ( $email instanceof \WC_Email && $email->is_customer_email() && ! in_array( $email->id, $skip, true ) ) {
+				$options[ $email->id ] = $email->get_title();
+			}
+		}
+
+		return $options;
+	}
+
+	/**
 	 * Field definitions.
 	 */
 	private static function fields(): array {
@@ -270,7 +303,7 @@ final class SettingsPage {
 				'type'  => 'title',
 				'id'    => 'denar_wc_documents',
 				'title' => __( 'Documents', 'denar-for-woocommerce' ),
-				'desc'  => __( 'Card and gateway payments get an invoice right away, cash on delivery when the order is completed, refunds a credit note. A document whose total in Denár differs from the order stays a draft for you to check.', 'denar-for-woocommerce' ),
+				'desc'  => __( 'Card and gateway payments get an invoice right away, other orders at the statuses chosen below (cash on delivery when the order is completed), refunds a credit note. A document whose total in Denár differs from the order stays a draft for you to check.', 'denar-for-woocommerce' ),
 			),
 			array(
 				'id'      => Settings::OPTION_ENABLED,
@@ -287,11 +320,32 @@ final class SettingsPage {
 				'default' => 'yes',
 			),
 			array(
-				'id'      => Settings::OPTION_ATTACH_PDF,
-				'title'   => __( 'Invoice in e-mail', 'denar-for-woocommerce' ),
-				'desc'    => __( 'Attach the invoice PDF from Denár to the completed order e-mail (turn off a PDF invoice plugin, or the customer gets two invoices)', 'denar-for-woocommerce' ),
-				'type'    => 'checkbox',
-				'default' => 'yes',
+				'id'       => Settings::OPTION_INVOICE_STATUSES,
+				'title'    => __( 'Invoice at statuses', 'denar-for-woocommerce' ),
+				'desc'     => __( 'The first of these statuses issues the invoice, marked paid. Add your own statuses that mean the order is paid.', 'denar-for-woocommerce' ),
+				'type'     => 'multiselect',
+				'class'    => 'wc-enhanced-select',
+				'options'  => self::status_options(),
+				'default'  => Settings::DEFAULT_INVOICE_STATUSES,
+				'desc_tip' => __( 'Card and gateway payments get the invoice as soon as they are paid, whatever the status.', 'denar-for-woocommerce' ),
+			),
+			array(
+				'id'      => Settings::OPTION_COD_INVOICE_STATUSES,
+				'title'   => __( 'Cash on delivery: invoice at statuses', 'denar-for-woocommerce' ),
+				'desc'    => __( 'Cash on delivery is paid when the parcel is delivered.', 'denar-for-woocommerce' ),
+				'type'    => 'multiselect',
+				'class'   => 'wc-enhanced-select',
+				'options' => self::status_options(),
+				'default' => Settings::DEFAULT_COD_INVOICE_STATUSES,
+			),
+			array(
+				'id'      => Settings::OPTION_ATTACH_EMAILS,
+				'title'   => __( 'Invoice in e-mails', 'denar-for-woocommerce' ),
+				'desc'    => __( 'The invoice PDF from Denár goes with these customer e-mails (and always with the invoice sent from the order screen). Turn off the invoice of a PDF invoice plugin, or the customer gets two invoices.', 'denar-for-woocommerce' ),
+				'type'    => 'multiselect',
+				'class'   => 'wc-enhanced-select',
+				'options' => self::email_options(),
+				'default' => Settings::attach_emails(),
 			),
 			array(
 				'id'          => Settings::OPTION_NUMBER_SERIES,

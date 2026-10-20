@@ -30,7 +30,22 @@ final class Settings {
 
 	public const OPTION_BACS_PROFORMA = 'denar_wc_bacs_proforma';
 
+	/**
+	 * 0.2.5 checkbox, read only as the default of OPTION_ATTACH_EMAILS.
+	 */
 	public const OPTION_ATTACH_PDF = 'denar_wc_attach_pdf';
+
+	public const OPTION_INVOICE_STATUSES = 'denar_wc_invoice_statuses';
+
+	public const OPTION_COD_INVOICE_STATUSES = 'denar_wc_cod_invoice_statuses';
+
+	public const OPTION_ATTACH_EMAILS = 'denar_wc_attach_emails';
+
+	public const DEFAULT_INVOICE_STATUSES = array( 'processing', 'completed' );
+
+	public const DEFAULT_COD_INVOICE_STATUSES = array( 'completed' );
+
+	public const DEFAULT_ATTACH_EMAILS = array( 'customer_completed_order' );
 
 	public const OPTION_NUMBER_SERIES = 'denar_wc_number_series';
 
@@ -77,10 +92,59 @@ final class Settings {
 	}
 
 	/**
-	 * Whether the invoice PDF from Denár goes with the completed-order e-mail.
+	 * Order statuses (without "wc-") at which an order paid this way gets
+	 * its invoice - the first of them issues it, the rest find it issued.
+	 * Cash on delivery is paid only on delivery, so it has its own list.
+	 *
+	 * @param string $payment_method Payment method id of the order.
 	 */
-	public static function attach_pdf(): bool {
-		return 'no' !== get_option( self::OPTION_ATTACH_PDF, 'yes' );
+	public static function invoice_statuses( string $payment_method ): array {
+		return 'cod' === $payment_method
+			? self::list_option( self::OPTION_COD_INVOICE_STATUSES, self::DEFAULT_COD_INVOICE_STATUSES )
+			: self::list_option( self::OPTION_INVOICE_STATUSES, self::DEFAULT_INVOICE_STATUSES );
+	}
+
+	/**
+	 * Ids of the customer e-mails that carry the invoice PDF; empty = none.
+	 */
+	public static function attach_emails(): array {
+		// Until saved, 0.2.5's checkbox decides: off meant no attachment at all.
+		$default = 'no' === get_option( self::OPTION_ATTACH_PDF ) ? array() : self::DEFAULT_ATTACH_EMAILS;
+
+		return self::list_option( self::OPTION_ATTACH_EMAILS, $default );
+	}
+
+	/**
+	 * Stored list of slugs, or the default when the option was never saved.
+	 * A saved empty list stays empty.
+	 *
+	 * @param mixed $value    Stored value (false when the option does not exist).
+	 * @param array $fallback Default list.
+	 */
+	public static function normalize_list( $value, array $fallback ): array {
+		if ( false === $value || null === $value ) {
+			return $fallback;
+		}
+
+		$list = array();
+		foreach ( (array) $value as $item ) {
+			$item = preg_replace( '/^wc-/', '', trim( (string) $item ) );
+			if ( '' !== $item && ! in_array( $item, $list, true ) ) {
+				$list[] = $item;
+			}
+		}
+
+		return $list;
+	}
+
+	/**
+	 * Option holding a list of slugs.
+	 *
+	 * @param string $option   Option name.
+	 * @param array  $fallback Default list.
+	 */
+	private static function list_option( string $option, array $fallback ): array {
+		return self::normalize_list( get_option( $option, false ), $fallback );
 	}
 
 	/**

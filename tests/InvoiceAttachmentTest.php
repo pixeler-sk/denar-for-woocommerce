@@ -10,16 +10,22 @@ use PHPUnit\Framework\TestCase;
  */
 final class InvoiceAttachmentTest extends TestCase {
 
-	public function test_completed_order_and_manual_invoice_carry_the_invoice(): void {
-		$this->assertSame( 'invoice', InvoiceAttachment::role_for( 'customer_completed_order' ) );
-		$this->assertSame( 'invoice', InvoiceAttachment::role_for( 'customer_invoice' ) );
+	public function test_chosen_emails_and_manual_invoice_carry_the_invoice(): void {
+		$chosen = array( 'customer_completed_order', 'customer_paid_order' );
+
+		$this->assertSame( 'invoice', InvoiceAttachment::role_for( 'customer_completed_order', $chosen ) );
+		// A custom status e-mail, e.g. "Paid" from a status plugin.
+		$this->assertSame( 'invoice', InvoiceAttachment::role_for( 'customer_paid_order', $chosen ) );
+		// Sent by hand from the order screen - always, even with nothing chosen.
+		$this->assertSame( 'invoice', InvoiceAttachment::role_for( 'customer_invoice', array() ) );
 	}
 
 	public function test_other_emails_carry_nothing(): void {
-		// Processing and on-hold e-mails go out in the checkout - the document is created later by the queue.
-		$this->assertNull( InvoiceAttachment::role_for( 'customer_processing_order' ) );
-		$this->assertNull( InvoiceAttachment::role_for( 'customer_on_hold_order' ) );
-		$this->assertNull( InvoiceAttachment::role_for( 'new_order' ) );
+		$chosen = array( 'customer_completed_order' );
+
+		$this->assertNull( InvoiceAttachment::role_for( 'customer_processing_order', $chosen ) );
+		$this->assertNull( InvoiceAttachment::role_for( 'new_order', $chosen ) );
+		$this->assertNull( InvoiceAttachment::role_for( 'customer_completed_order', array() ) );
 	}
 
 	public function test_file_name_follows_type_and_number(): void {

@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
-Stable tag: 0.2.5
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,9 +22,10 @@ orders and listens to webhooks.
 * **Bank transfer:** a proforma with PAY by square is issued when the order is placed, with the order number as the variable symbol. Once Denár pairs the payment from the bank, the order moves to Processing and the invoice is issued from the proforma.
 * **Card and payment gateways:** the invoice is issued and marked paid right away.
 * **Cash on delivery:** the invoice is issued when the order is completed.
+* **Your statuses:** choose the statuses that issue the invoice (custom ones too), separately for cash on delivery.
 * **Refunds:** a credit note to the invoice, for the refunded lines or the refunded amount.
 * **Cancelled orders:** an unpaid proforma is cancelled.
-* **Invoice in e-mail:** the completed order e-mail carries the invoice PDF from Denár.
+* **Invoice in e-mail:** the invoice PDF from Denár goes with the customer e-mails you choose (completed order by default).
 * Coupons become a document discount, shipping and fees are lines; company details (IČO, DIČ, IČ DPH) are read from the common `_billing_ic` / `_billing_dic` / `_billing_dic_dph` fields; EU reverse charge and export from the px-shop-core company module.
 * Every document is checked against the order total - a document whose total differs (rounding of prices with VAT) stays a draft instead of being issued with a wrong amount.
 * The order screen lists the documents with a PDF download; "Send to Denár again" retries after a fix.
@@ -85,6 +86,10 @@ Yes. The plugin sends the prices with VAT and Denár works the base out of them,
 WooCommerce -> Status -> Logs, source "denar". The API key is never logged.
 
 == Changelog ==
+
+= 0.3.0 =
+* Choose the order statuses that issue the invoice, custom statuses included (e.g. "Paid" from a status plugin), with a separate list for cash on delivery - like PDF invoice plugins do.
+* Choose the customer e-mails that carry the invoice PDF (custom status e-mails included); replaces the 0.2.5 checkbox.
 
 = 0.2.5 =
 * The completed order e-mail (and the invoice sent from the order screen) carries the invoice PDF from Denár; a cash on delivery invoice is created right then. Setting "Invoice in e-mail", on by default.

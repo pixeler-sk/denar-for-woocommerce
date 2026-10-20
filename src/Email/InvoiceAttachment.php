@@ -17,22 +17,22 @@ use Denar\WooCommerce\Sync\OrderSync;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The completed-order e-mail (and the invoice sent by hand from the order
- * screen) carries the invoice PDF from Denár. Completing an order is an admin
- * action, never the checkout, so a missing invoice - cash on delivery is
- * invoiced exactly at this moment - is created here synchronously; the queued
- * task then finds it and stops. Any failure only leaves the e-mail without
- * the attachment: the e-mail itself always goes out.
+ * The customer e-mails chosen in the settings (the completed order by
+ * default, and always the invoice sent by hand from the order screen) carry
+ * the invoice PDF from Denár. When the order is at one of its invoice
+ * statuses but the queue has not issued the invoice yet - a status changed by
+ * hand fires the e-mail in the same request - it is created here
+ * synchronously; the queued task then finds it and stops. That happens only
+ * in the admin, cron or CLI, never in the checkout or a gateway callback.
+ * Any failure only leaves the e-mail without the attachment: the e-mail
+ * itself always goes out.
  */
 final class InvoiceAttachment {
 
 	/**
-	 * E-mail id => document role.
+	 * Sent by hand from the order screen - always with the invoice.
 	 */
-	private const EMAILS = array(
-		'customer_completed_order' => 'invoice',
-		'customer_invoice'         => 'invoice',
-	);
+	private const MANUAL_EMAIL = 'customer_invoice';
 
 	/**
 	 * Files written for the current request, removed on shutdown.
@@ -57,10 +57,10 @@ final class InvoiceAttachment {
 	 */
 	public static function attach( $attachments, $email_id, $email_object = null ) {
 		$attachments = is_array( $attachments ) ? $attachments : array();
-		$role        = self::role_for( (string) $email_id );
+		$role        = self::role_for( (string) $email_id, Settings::attach_emails() );
 
 		if ( null === $role || ! $email_object instanceof \WC_Order || $email_object instanceof \WC_Order_Refund
-			|| ! Settings::enabled() || ! Settings::attach_pdf() ) {
+			|| ! Settings::enabled() ) {
 			return $attachments;
 		}
 
@@ -87,10 +87,11 @@ final class InvoiceAttachment {
 	/**
 	 * Document role attached to an e-mail, or null.
 	 *
-	 * @param string $email_id E-mail id.
+	 * @param string   $email_id E-mail id.
+	 * @param string[] $emails   E-mail ids chosen in the settings.
 	 */
-	public static function role_for( string $email_id ): ?string {
-		return self::EMAILS[ $email_id ] ?? null;
+	public static function role_for( string $email_id, array $emails ): ?string {
+		return self::MANUAL_EMAIL === $email_id || in_array( $email_id, $emails, true ) ? 'invoice' : null;
 	}
 
 	/**
@@ -107,8 +108,8 @@ final class InvoiceAttachment {
 	}
 
 	/**
-	 * Issued document of the role; the invoice of a completed or paid order
-	 * is created first when the queue has not done it yet.
+	 * Issued document of the role; the invoice of an order at one of its
+	 * invoice statuses is created first when the queue has not done it yet.
 	 *
 	 * @param \WC_Order $order Order.
 	 * @param string    $role  Role.
@@ -117,7 +118,7 @@ final class InvoiceAttachment {
 		$document = OrderState::get( $order, $role );
 
 		if ( 'invoice' === $role && ( null === $document || '' === $document['number'] )
-			&& ( $order->is_paid() || $order->has_status( 'completed' ) ) ) {
+			&& OrderSync::invoices_at( $order, (string) $order->get_status() ) && self::may_call_api_now() ) {
 			OrderSync::process( $order->get_id(), 'invoice' );
 			$fresh    = wc_get_order( $order->get_id() );
 			$document = $fresh instanceof \WC_Order ? OrderState::get( $fresh, $role ) : null;
@@ -125,6 +126,15 @@ final class InvoiceAttachment {
 
 		// A draft (total mismatch) has no number and no final PDF yet.
 		return null !== $document && $document['id'] > 0 && '' !== $document['number'] ? $document : null;
+	}
+
+	/**
+	 * Outside the checkout and gateway callbacks: the admin (status changed
+	 * by hand, also over admin-ajax), cron or WP-CLI. Not REST - the block
+	 * checkout runs over the Store API.
+	 */
+	private static function may_call_api_now(): bool {
+		return is_admin() || wp_doing_cron() || ( defined( 'WP_CLI' ) && WP_CLI );
 	}
 
 	/**

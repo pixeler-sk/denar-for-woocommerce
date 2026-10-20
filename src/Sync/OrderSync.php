@@ -21,9 +21,11 @@ defined( 'ABSPATH' ) || exit;
  *   order number, PAY by square on its PDF)
  * - Denár pairs the payment (webhook document.paid on the proforma)
  *   -> WC_Order::payment_complete() -> invoice from the proforma, paid
- * - paid order (card, gateway, bacs confirmed by hand) -> invoice, paid;
- *   with a proforma it is created from it
- * - cash on delivery -> invoice when the order is completed, paid
+ * - paid order (card, gateway) and every order reaching one of the
+ *   statuses chosen in the settings (processing and completed by default,
+ *   custom statuses such as "Paid" may be added) -> invoice, paid; with
+ *   a proforma it is created from it
+ * - cash on delivery -> invoice at its own statuses (completed by default)
  * - refund -> credit note to the invoice
  * - cancelled order -> unpaid proforma cancelled (a draft one deleted)
  *
@@ -58,8 +60,7 @@ final class OrderSync {
 
 		add_action( 'woocommerce_order_status_on-hold', array( self::class, 'on_hold' ), 10, 2 );
 		add_action( 'woocommerce_payment_complete', array( self::class, 'on_paid' ) );
-		add_action( 'woocommerce_order_status_processing', array( self::class, 'on_processing' ), 10, 2 );
-		add_action( 'woocommerce_order_status_completed', array( self::class, 'on_paid' ) );
+		add_action( 'woocommerce_order_status_changed', array( self::class, 'on_status_changed' ), 10, 4 );
 		add_action( 'woocommerce_order_status_cancelled', array( self::class, 'on_cancelled' ) );
 		add_action( 'woocommerce_order_refunded', array( self::class, 'on_refunded' ), 10, 2 );
 	}
@@ -78,25 +79,40 @@ final class OrderSync {
 	}
 
 	/**
-	 * Payment complete or order completed.
+	 * Payment complete (card, gateway, a proforma paired in Denár).
 	 *
 	 * @param int $order_id Order id.
 	 */
 	public static function on_paid( $order_id ): void {
-		self::enqueue( (int) $order_id, 'invoice' );
+		$order = wc_get_order( $order_id );
+		if ( $order instanceof \WC_Order && 'cod' !== $order->get_payment_method() ) {
+			self::enqueue( (int) $order_id, 'invoice' );
+		}
 	}
 
 	/**
-	 * Processing: paid, except cash on delivery (invoiced on completion).
+	 * Status change: the invoice at the statuses chosen for the payment method.
 	 *
-	 * @param int       $order_id Order id.
-	 * @param \WC_Order $order    Order.
+	 * @param int            $order_id Order id.
+	 * @param string         $from     Previous status.
+	 * @param string         $to       New status.
+	 * @param \WC_Order|null $order    Order.
 	 */
-	public static function on_processing( $order_id, $order = null ): void {
+	public static function on_status_changed( $order_id, $from, $to, $order = null ): void {
 		$order = $order instanceof \WC_Order ? $order : wc_get_order( $order_id );
-		if ( $order && 'cod' !== $order->get_payment_method() ) {
+		if ( $order instanceof \WC_Order && self::invoices_at( $order, (string) $to ) ) {
 			self::enqueue( (int) $order_id, 'invoice' );
 		}
+	}
+
+	/**
+	 * Whether the order gets its invoice at this status.
+	 *
+	 * @param \WC_Order $order  Order.
+	 * @param string    $status Status without "wc-".
+	 */
+	public static function invoices_at( \WC_Order $order, string $status ): bool {
+		return in_array( $status, Settings::invoice_statuses( (string) $order->get_payment_method() ), true );
 	}
 
 	/**

@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Denár for WooCommerce 0.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/denar-for-"
 "woocommerce\n"
-"POT-Creation-Date: 2026-10-17T14:11:21+00:00\n"
+"POT-Creation-Date: 2026-10-20T11:05:53+00:00\n"
 "Language: sk_SK\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +33,12 @@ msgstr ""
 
 #. Author of the plugin
 #: denar-for-woocommerce.php
-msgid "Pixeler"
+msgid "Pixeler s. r. o."
 msgstr ""
 
 #. Author URI of the plugin
 #: denar-for-woocommerce.php
-msgid "https://pixeler.sk/"
+msgid "https://pixeler.sk"
 msgstr ""
 
 #: src/Admin/OrderBox.php:43 src/Admin/SettingsPage.php:55
@@ -167,15 +167,15 @@ msgstr "Overené: %s"
 msgid "Check connection"
 msgstr "Overiť spojenie"
 
-#: src/Admin/SettingsPage.php:211
+#: src/Admin/SettingsPage.php:244
 msgid "Stored - leave empty to keep it."
 msgstr "Uložený - nechajte prázdne, ak ho nemeníte."
 
-#: src/Admin/SettingsPage.php:212
+#: src/Admin/SettingsPage.php:245
 msgid "Set in wp-config.php."
 msgstr "Nastavené vo wp-config.php."
 
-#: src/Admin/SettingsPage.php:218
+#: src/Admin/SettingsPage.php:251
 msgid ""
 "Create the API key in Denár under Account -> API keys with the scopes "
 "documents and partners (read and write)."
@@ -183,27 +183,27 @@ msgstr ""
 "API kľúč vytvorte v Denári v Účet -> API kľúče s oprávneniami doklady a "
 "partneri (čítanie aj zápis)."
 
-#: src/Admin/SettingsPage.php:222
+#: src/Admin/SettingsPage.php:255
 msgid "API URL"
 msgstr "Adresa API"
 
-#: src/Admin/SettingsPage.php:226
+#: src/Admin/SettingsPage.php:259
 msgid ""
 "Leave empty for the production Denár. Change only for staging or local "
 "development."
 msgstr ""
 "Pre ostrý Denár nechajte prázdne. Meňte len pre staging alebo lokálny vývoj."
 
-#: src/Admin/SettingsPage.php:231
+#: src/Admin/SettingsPage.php:264
 msgid "API key"
 msgstr "API kľúč"
 
-#: src/Admin/SettingsPage.php:247
+#: src/Admin/SettingsPage.php:280
 msgid "Webhook"
 msgstr "Webhook"
 
 #. translators: %s: webhook URL
-#: src/Admin/SettingsPage.php:250
+#: src/Admin/SettingsPage.php:283
 #, php-format
 msgid ""
 "In Denár under Account -> Webhooks add the URL %s with the events "
@@ -212,37 +212,39 @@ msgstr ""
 "V Denári v Účet -> Webhooky pridajte adresu %s s udalosťami document.paid a "
 "document.cancelled a jej tajný kľúč vložte sem."
 
-#: src/Admin/SettingsPage.php:256
+#: src/Admin/SettingsPage.php:289
 msgid "Webhook secret"
 msgstr "Tajný kľúč webhooku"
 
-#: src/Admin/SettingsPage.php:272
+#: src/Admin/SettingsPage.php:305
 msgid "Documents"
 msgstr "Doklady"
 
-#: src/Admin/SettingsPage.php:273
+#: src/Admin/SettingsPage.php:306
 msgid ""
-"Card and gateway payments get an invoice right away, cash on delivery when "
-"the order is completed, refunds a credit note. A document whose total in "
-"Denár differs from the order stays a draft for you to check."
+"Card and gateway payments get an invoice right away, other orders at the "
+"statuses chosen below (cash on delivery when the order is completed), "
+"refunds a credit note. A document whose total in Denár differs from the "
+"order stays a draft for you to check."
 msgstr ""
-"Platba kartou alebo bránou dostane faktúru hneď, dobierka pri vybavení "
-"objednávky, vrátenie peňazí dobropis. Doklad, ktorého suma v Denári nesedí s "
-"objednávkou, ostane konceptom na kontrolu."
+"Platba kartou alebo bránou dostane faktúru hneď, ostatné objednávky pri "
+"stavoch vybraných nižšie (dobierka pri vybavení), vrátenie peňazí dobropis. "
+"Doklad, ktorého suma v Denári nesedí s objednávkou, ostane konceptom na "
+"kontrolu."
 
-#: src/Admin/SettingsPage.php:277
+#: src/Admin/SettingsPage.php:310
 msgid "Send orders to Denár"
 msgstr "Odosielať objednávky do Denára"
 
-#: src/Admin/SettingsPage.php:278
+#: src/Admin/SettingsPage.php:311
 msgid "Issue documents for orders automatically"
 msgstr "Automaticky vystavovať doklady k objednávkam"
 
-#: src/Admin/SettingsPage.php:284
+#: src/Admin/SettingsPage.php:317
 msgid "Bank transfer"
 msgstr "Bankový prevod"
 
-#: src/Admin/SettingsPage.php:285
+#: src/Admin/SettingsPage.php:318
 msgid ""
 "Issue a proforma with PAY by square when the order is placed; the invoice "
 "follows once Denár pairs the payment"
@@ -250,27 +252,57 @@ msgstr ""
 "Pri objednávke vystaviť zálohovú faktúru s PAY by square; faktúra nasleduje, "
 "keď Denár spáruje úhradu"
 
-#: src/Admin/SettingsPage.php:291
-msgid "Invoice in e-mail"
-msgstr "Faktúra v e-maile"
+#: src/Admin/SettingsPage.php:324
+msgid "Invoice at statuses"
+msgstr "Faktúra pri stavoch"
 
-#: src/Admin/SettingsPage.php:292
+#: src/Admin/SettingsPage.php:325
 msgid ""
-"Attach the invoice PDF from Denár to the completed order e-mail (turn off a "
-"PDF invoice plugin, or the customer gets two invoices)"
+"The first of these statuses issues the invoice, marked paid. Add your own "
+"statuses that mean the order is paid."
 msgstr ""
-"Priložiť PDF faktúry z Denára k e-mailu o vybavenej objednávke (vypnite plugin "
-"na PDF faktúry, inak zákazník dostane dve faktúry)"
+"Prvý z týchto stavov vystaví faktúru ako uhradenú. Pridajte aj vlastné "
+"stavy, ktoré znamenajú, že objednávka je zaplatená."
 
-#: src/Admin/SettingsPage.php:298
+#: src/Admin/SettingsPage.php:330
+msgid ""
+"Card and gateway payments get the invoice as soon as they are paid, whatever "
+"the status."
+msgstr ""
+"Platba kartou alebo bránou dostane faktúru hneď po zaplatení, bez ohľadu na "
+"stav."
+
+#: src/Admin/SettingsPage.php:334
+msgid "Cash on delivery: invoice at statuses"
+msgstr "Dobierka: faktúra pri stavoch"
+
+#: src/Admin/SettingsPage.php:335
+msgid "Cash on delivery is paid when the parcel is delivered."
+msgstr "Dobierka je zaplatená až pri doručení zásielky."
+
+#: src/Admin/SettingsPage.php:343
+msgid "Invoice in e-mails"
+msgstr "Faktúra v e-mailoch"
+
+#: src/Admin/SettingsPage.php:344
+msgid ""
+"The invoice PDF from Denár goes with these customer e-mails (and always with "
+"the invoice sent from the order screen). Turn off the invoice of a PDF "
+"invoice plugin, or the customer gets two invoices."
+msgstr ""
+"PDF faktúry z Denára sa priloží k týmto e-mailom zákazníkovi (a vždy k "
+"faktúre odoslanej z objednávky). Vo vašom plugine na PDF faktúry faktúru "
+"vypnite, inak zákazník dostane dve faktúry."
+
+#: src/Admin/SettingsPage.php:352
 msgid "Number series"
 msgstr "Číselný rad"
 
-#: src/Admin/SettingsPage.php:301
+#: src/Admin/SettingsPage.php:355
 msgid "default"
 msgstr "predvolený"
 
-#: src/Admin/SettingsPage.php:302
+#: src/Admin/SettingsPage.php:356
 msgid ""
 "Code of a number series from Denár -> Company -> Number series. Empty = the "
 "series set on the API key, or the default one."
@@ -278,19 +310,19 @@ msgstr ""
 "Kód číselného radu z Denár -> Firma -> Číselné rady. Prázdne = rad nastavený "
 "pri API kľúči, inak predvolený."
 
-#: src/Admin/SettingsPage.php:306
+#: src/Admin/SettingsPage.php:360
 msgid "EU reverse charge"
 msgstr "Prenesenie daňovej povinnosti v EÚ"
 
-#: src/Admin/SettingsPage.php:310
+#: src/Admin/SettingsPage.php:364
 msgid "Goods to another EU member state"
 msgstr "Tovar do iného členského štátu EÚ"
 
-#: src/Admin/SettingsPage.php:311
+#: src/Admin/SettingsPage.php:365
 msgid "Services to another EU member state"
 msgstr "Služby do iného členského štátu EÚ"
 
-#: src/Admin/SettingsPage.php:313
+#: src/Admin/SettingsPage.php:367
 msgid ""
 "Used when the order was placed without VAT because of a verified EU VAT id."
 msgstr "Použije sa, keď bola objednávka bez DPH pre overené IČ DPH z EÚ."
@@ -312,42 +344,42 @@ msgid "Refund for order no. %s"
 msgstr "Vrátenie platby k objednávke č. %s"
 
 #. translators: %s: document number
-#: src/Sync/OrderSync.php:201
+#: src/Sync/OrderSync.php:217
 #, php-format
 msgid "Denár: proforma %s issued."
 msgstr "Denár: vystavená zálohová faktúra %s."
 
 #. translators: %s: document number
-#: src/Sync/OrderSync.php:273
+#: src/Sync/OrderSync.php:289
 #, php-format
 msgid "Denár: invoice %s issued and marked paid."
 msgstr "Denár: vystavená faktúra %s, označená ako uhradená."
 
 #. translators: %s: document number
-#: src/Sync/OrderSync.php:302
+#: src/Sync/OrderSync.php:318
 #, php-format
 msgid "Denár: proforma %s cancelled."
 msgstr "Denár: zálohová faktúra %s stornovaná."
 
-#: src/Sync/OrderSync.php:329
+#: src/Sync/OrderSync.php:345
 msgid "Denár: refund without an issued invoice - no credit note created."
 msgstr ""
 "Denár: vrátenie peňazí bez vystavenej faktúry - dobropis sa nevytvoril."
 
 #. translators: %s: document number
-#: src/Sync/OrderSync.php:345
+#: src/Sync/OrderSync.php:361
 #, php-format
 msgid "Denár: credit note %s issued."
 msgstr "Denár: vystavený dobropis %s."
 
 #. translators: %s: document number
-#: src/Sync/OrderSync.php:375
+#: src/Sync/OrderSync.php:391
 #, php-format
 msgid "Denár: payment of proforma %s received."
 msgstr "Denár: prijatá úhrada zálohovej faktúry %s."
 
 #. translators: 1: Denár total, 2: shop total
-#: src/Sync/OrderSync.php:465
+#: src/Sync/OrderSync.php:481
 #, php-format
 msgid ""
 "Denár: the draft total %1$s differs from the shop total %2$s (rounding of "
@@ -357,7 +389,7 @@ msgstr ""
 "s DPH). Koncept sa nevystavil - skontrolujte ho v Denári."
 
 #. translators: %s: error message
-#: src/Sync/OrderSync.php:527
+#: src/Sync/OrderSync.php:543
 #, php-format
 msgid "Denár: %s"
 msgstr "Denár: %s"

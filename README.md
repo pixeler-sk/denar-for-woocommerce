@@ -12,7 +12,8 @@ je v Denári, plugin len posiela objednávky a prijíma webhooky.
 - [x] B2B údaje z `_billing_ic` / `_billing_dic` / `_billing_dic_dph` (px-shop-core, WPify), prenesenie DPH a vývoz z px-shop-core
 - [x] ceny s DPH: pri `prices_include_tax` ide `prices_include_vat` + `unit_price_with_vat`, zľava z kupónov ako rozdiel riadkov s DPH - suma sedí na cent (vyžaduje Denár s `prices_include_vat`)
 - [ ] B2B polia v blokovej pokladni, keď px-shop-core nie je
-- [x] PDF faktúry v e-maile „Dokončená objednávka“ a v ručne odoslanej faktúre (0.2.5, nastavenie „Faktúra v e-maile“)
+- [x] PDF faktúry v e-mailoch zákazníkovi podľa výberu (0.2.5, od 0.3.0 zoznam e-mailov)
+- [x] stavy, pri ktorých vzniká faktúra, vrátane vlastných, zvlášť pre dobierku (0.3.0, ako PDF Invoices)
 - [ ] PDF v Môj účet (podpísaný odkaz, Denár T081)
 
 ## Vývoj

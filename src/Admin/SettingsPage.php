@@ -320,6 +320,15 @@ final class SettingsPage {
 				'default' => 'yes',
 			),
 			array(
+				'id'      => Settings::OPTION_PAID_STATUS,
+				'title'   => __( 'Status after payment', 'denar-for-woocommerce' ),
+				'desc'    => __( 'The order moves to this status once Denár pairs the bank payment of its proforma. The invoice then carries the day the money reached the bank.', 'denar-for-woocommerce' ),
+				'type'    => 'select',
+				'class'   => 'wc-enhanced-select',
+				'options' => self::status_options(),
+				'default' => 'processing',
+			),
+			array(
 				'id'       => Settings::OPTION_INVOICE_STATUSES,
 				'title'    => __( 'Invoice at statuses', 'denar-for-woocommerce' ),
 				'desc'     => __( 'The first of these statuses issues the invoice, marked paid. Add your own statuses that mean the order is paid.', 'denar-for-woocommerce' ),

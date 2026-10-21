@@ -41,6 +41,8 @@ final class Settings {
 
 	public const OPTION_ATTACH_EMAILS = 'denar_wc_attach_emails';
 
+	public const OPTION_PAID_STATUS = 'denar_wc_paid_status';
+
 	public const DEFAULT_INVOICE_STATUSES = array( 'processing', 'completed' );
 
 	public const DEFAULT_COD_INVOICE_STATUSES = array( 'completed' );
@@ -102,6 +104,16 @@ final class Settings {
 		return 'cod' === $payment_method
 			? self::list_option( self::OPTION_COD_INVOICE_STATUSES, self::DEFAULT_COD_INVOICE_STATUSES )
 			: self::list_option( self::OPTION_INVOICE_STATUSES, self::DEFAULT_INVOICE_STATUSES );
+	}
+
+	/**
+	 * Order status (without "wc-") after Denár pairs the payment of a
+	 * proforma; processing by default, a custom "Paid" status may be chosen.
+	 */
+	public static function paid_status(): string {
+		$status = preg_replace( '/^wc-/', '', trim( (string) get_option( self::OPTION_PAID_STATUS, '' ) ) );
+
+		return '' !== $status ? $status : 'processing';
 	}
 
 	/**

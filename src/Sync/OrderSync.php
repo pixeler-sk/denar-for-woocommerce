@@ -9,6 +9,7 @@ namespace Denar\WooCommerce\Sync;
 
 use Denar\WooCommerce\Api\ApiException;
 use Denar\WooCommerce\Api\Client;
+use Denar\WooCommerce\Integration\Packeta;
 use Denar\WooCommerce\Plugin;
 use Denar\WooCommerce\Settings;
 
@@ -44,6 +45,11 @@ final class OrderSync {
 	/**
 	 * Waits between attempts after a transport error, 429 or 5xx (seconds).
 	 */
+	/**
+	 * Bank day of the proforma payment paired in Denár (Y-m-d).
+	 */
+	private const PAID_META = '_denar_paid_at';
+
 	private const RETRY_DELAYS = array( 60, 300, 1800, 7200, 43200 );
 
 	/**
@@ -384,16 +390,45 @@ final class OrderSync {
 
 		OrderState::put( $order, $role, $document );
 
-		if ( 'proforma' === $role && ! $order->is_paid() ) {
-			$order->add_order_note(
-				sprintf(
-					/* translators: %s: document number */
-					__( 'Denár: payment of proforma %s received.', 'denar-for-woocommerce' ),
-					(string) ( $document['number'] ?? '' )
-				)
-			);
-			// Status to processing, paid date, stock - and the invoice task.
-			$order->payment_complete();
+		if ( 'proforma' !== $role ) {
+			return;
+		}
+
+		// The day the money reached the bank - the day VAT became due (§ 19 ods. 4).
+		$paid_on = substr( (string) ( $document['paid_at'] ?? '' ), 0, 10 );
+		if ( 1 === preg_match( '/^\d{4}-\d{2}-\d{2}$/', $paid_on ) ) {
+			$order->update_meta_data( self::PAID_META, $paid_on );
+			$order->save();
+		}
+
+		// Already marked paid by hand (also a custom status like "Paid"): only the invoice.
+		if ( $order->is_paid() || self::invoices_at( $order, (string) $order->get_status() ) ) {
+			self::enqueue( $order->get_id(), 'invoice' );
+
+			return;
+		}
+
+		$order->add_order_note(
+			sprintf(
+				/* translators: %s: document number */
+				__( 'Denár: payment of proforma %s received.', 'denar-for-woocommerce' ),
+				(string) ( $document['number'] ?? '' )
+			)
+		);
+
+		// Status (the one chosen in the settings), paid date, stock - and the invoice task.
+		$status = Settings::paid_status();
+		$set    = static fn () => $status;
+		add_filter( 'woocommerce_payment_complete_order_status', $set, 100 );
+		$order->payment_complete();
+		remove_filter( 'woocommerce_payment_complete_order_status', $set, 100 );
+
+		if ( '' !== $paid_on && 1 === preg_match( '/^\d{4}-\d{2}-\d{2}$/', $paid_on ) ) {
+			$order = wc_get_order( $order->get_id() );
+			if ( $order instanceof \WC_Order ) {
+				$order->set_date_paid( $paid_on . ' 12:00:00' );
+				$order->save();
+			}
 		}
 	}
 
@@ -549,11 +584,27 @@ final class OrderSync {
 	}
 
 	/**
-	 * Payment date of the order (Y-m-d), today when unknown.
+	 * Day the order was paid (Y-m-d) - the delivery date on the invoice and
+	 * the day VAT became due: the bank day of a payment paired in Denár,
+	 * for cash on delivery the day the parcel was taken over, otherwise the
+	 * paid or completed date, today when nothing is known (a status set by
+	 * hand, e.g. a custom "Paid", records no date).
 	 *
 	 * @param \WC_Order $order Order.
 	 */
 	private static function paid_at( \WC_Order $order ): string {
+		$paired = (string) $order->get_meta( self::PAID_META );
+		if ( '' !== $paired ) {
+			return $paired;
+		}
+
+		if ( 'cod' === $order->get_payment_method() ) {
+			$delivered = Packeta::delivered_on( $order );
+			if ( null !== $delivered ) {
+				return $delivered;
+			}
+		}
+
 		$date = $order->get_date_paid() ?? $order->get_date_completed();
 
 		return $date ? $date->date( 'Y-m-d' ) : wp_date( 'Y-m-d' );

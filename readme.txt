@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,6 +22,7 @@ orders and listens to webhooks.
 * **Bank transfer:** a proforma with PAY by square is issued when the order is placed, with the order number as the variable symbol. Once Denár pairs the payment from the bank, the order moves to Processing and the invoice is issued from the proforma.
 * **Card and payment gateways:** the invoice is issued and marked paid right away.
 * **Cash on delivery:** the invoice is issued when the order is completed.
+* **Tax point dates:** the bank day of a paired payment, the Packeta delivery day for cash on delivery.
 * **Your statuses:** choose the statuses that issue the invoice (custom ones too), separately for cash on delivery.
 * **Refunds:** a credit note to the invoice, for the refunded lines or the refunded amount.
 * **Cancelled orders:** an unpaid proforma is cancelled.
@@ -67,6 +68,16 @@ Nothing is sent before the administrator enters an API key.
 * Terms of service: https://denar.sk/obchodne-podmienky
 * Privacy policy: https://denar.sk/ochrana-osobnych-udajov
 
+Only when the shop uses the Packeta plugin and a cash on delivery order is to
+be invoiced, the plugin asks the Packeta API (`https://www.zasilkovna.cz/api/rest`,
+operated by Zásilkovna s.r.o., Czech Republic) for the tracking history of the
+order's parcel, to put the day the parcel was taken over on the invoice. It
+sends the shop's Packeta API password and the parcel id stored by the Packeta
+plugin - no customer data.
+
+* Packeta terms: https://www.packeta.com/general-terms-conditions
+* Packeta privacy policy: https://www.packeta.com/privacy-policy
+
 == Frequently Asked Questions ==
 
 = Does the plugin work without Denár? =
@@ -86,6 +97,10 @@ Yes. The plugin sends the prices with VAT and Denár works the base out of them,
 WooCommerce -> Status -> Logs, source "denar". The API key is never logged.
 
 == Changelog ==
+
+= 0.4.0 =
+* Delivery date on the invoice is the day VAT became due: the bank day of a proforma payment paired in Denár, for cash on delivery with Packeta the day the parcel was taken over (from Packeta tracking).
+* Setting "Status after payment": the status an order moves to once Denár pairs its payment (e.g. a custom "Paid"). An order already marked paid by hand keeps its status.
 
 = 0.3.0 =
 * Choose the order statuses that issue the invoice, custom statuses included (e.g. "Paid" from a status plugin), with a separate list for cash on delivery - like PDF invoice plugins do.

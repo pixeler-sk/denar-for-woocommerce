@@ -7,7 +7,8 @@
 #
 # github = release asset for Plugin Update Checker (with lib/ and SelfHosted).
 # wporg  = wordpress.org: no self-updater (guideline 8), no bundled translation
-#          (language packs from translate.wordpress.org).
+#          (language packs from translate.wordpress.org), no Update URI header
+#          (wordpress.org does not import a release that carries one).
 set -euo pipefail
 
 TARGET=${1:?target github|wporg}
@@ -31,6 +32,14 @@ case "$TARGET" in
 	wporg)
 		rm "$OUT/src/SelfHosted.php"
 		rm -f "$OUT"/languages/*.po "$OUT"/languages/*.mo
+		# Update URI points updates at GitHub; with it wordpress.org kept
+		# serving 0.2.5 and never published 0.3.0 - 0.4.1.
+		sed -i.bak '/^ \* Update URI:/d' "$OUT/$SLUG.php"
+		rm "$OUT/$SLUG.php.bak"
+		if grep -q 'Update URI' "$OUT/$SLUG.php"; then
+			echo "Update URI header left in the wordpress.org build" >&2
+			exit 1
+		fi
 		ZIP="$SLUG-wporg-$VERSION.zip"
 		;;
 	*)

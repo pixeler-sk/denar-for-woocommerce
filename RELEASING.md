@@ -76,6 +76,7 @@ k releasu oba zipy:
 |---|---|---|
 | aktualizácie | Plugin Update Checker (`lib/`, `src/SelfHosted.php`) | WordPress sám; updater je tam zakázaný (guideline 8) |
 | preklad | pribalený `languages/*.mo` | language pack z translate.wordpress.org |
+| hlavička `Update URI` | ostáva (GitHub) | build ju vyhodí - s ňou wordpress.org vydanie neprevezme (0.3.0 - 0.4.1 tam preto nikdy nevyšli) |
 
 Všetko, čo wordpress.org nesmie dostať, patrí do `src/SelfHosted.php` -
 build ho vyhodí a hlavný súbor ho volá len cez `class_exists`. CI na každý push

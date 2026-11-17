@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
-Stable tag: 0.4.1
+Stable tag: 0.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,9 @@ Yes. The plugin sends the prices with VAT and Denár works the base out of them,
 WooCommerce -> Status -> Logs, source "denar". The API key is never logged.
 
 == Changelog ==
+
+= 0.4.2 =
+* Release for wordpress.org: versions 0.3.0 to 0.4.1 were not published there because of the "Update URI" plugin header. No change in behaviour.
 
 = 0.4.1 =
 * Bank transfer paired in Denár: the invoice is issued before the order is marked paid, so the e-mail of the paid order (e.g. "Completed" for downloads) carries its PDF.

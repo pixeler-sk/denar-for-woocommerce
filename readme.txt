@@ -5,7 +5,7 @@ Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
 WC requires at least: 8.0
-Stable tag: 0.4.0
+Stable tag: 0.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,11 @@ Yes. The plugin sends the prices with VAT and Denár works the base out of them,
 WooCommerce -> Status -> Logs, source "denar". The API key is never logged.
 
 == Changelog ==
+
+= 0.4.1 =
+* Bank transfer paired in Denár: the invoice is issued before the order is marked paid, so the e-mail of the paid order (e.g. "Completed" for downloads) carries its PDF.
+* An order of downloads only is completed after the payment as WooCommerce does it; "Status after payment" applies to orders that need processing.
+* Orders list: column "Invoice" with the number of the invoice from Denár (the proforma while the order waits for payment), linked to the PDF.
 
 = 0.4.0 =
 * Delivery date on the invoice is the day VAT became due: the bank day of a proforma payment paired in Denár, for cash on delivery with Packeta the day the parcel was taken over (from Packeta tracking).

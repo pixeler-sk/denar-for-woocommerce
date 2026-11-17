@@ -164,7 +164,7 @@ final class OrderBox {
 	 * @param \WC_Order $order       Order.
 	 * @param int       $document_id Document id.
 	 */
-	private static function pdf_url( \WC_Order $order, int $document_id ): string {
+	public static function pdf_url( \WC_Order $order, int $document_id ): string {
 		$url = add_query_arg(
 			array(
 				'action'   => self::PDF_ACTION,

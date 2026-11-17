@@ -8,6 +8,7 @@
 namespace Denar\WooCommerce;
 
 use Denar\WooCommerce\Admin\OrderBox;
+use Denar\WooCommerce\Admin\OrdersColumn;
 use Denar\WooCommerce\Admin\SettingsPage;
 use Denar\WooCommerce\Email\InvoiceAttachment;
 use Denar\WooCommerce\Sync\OrderSync;
@@ -35,6 +36,7 @@ final class Plugin {
 
 		if ( is_admin() ) {
 			OrderBox::register();
+			OrdersColumn::register();
 		}
 	}
 

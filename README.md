@@ -14,6 +14,7 @@ je v Denári, plugin len posiela objednávky a prijíma webhooky.
 - [ ] B2B polia v blokovej pokladni, keď px-shop-core nie je
 - [x] PDF faktúry v e-mailoch zákazníkovi podľa výberu (0.2.5, od 0.3.0 zoznam e-mailov)
 - [x] dátum dodania = deň pripísania spárovanej platby, pri dobierke deň prevzatia z Packeta trackingu; stav po úhrade (0.4.0)
+- [x] faktúra pred e-mailom zaplatenej objednávky (PDF aj pri objednávke na stiahnutie), stĺpec Faktúra v zozname objednávok (0.4.1)
 - [x] stavy, pri ktorých vzniká faktúra, vrátane vlastných, zvlášť pre dobierku (0.3.0, ako PDF Invoices)
 - [ ] PDF v Môj účet (podpísaný odkaz, Denár T081)
 

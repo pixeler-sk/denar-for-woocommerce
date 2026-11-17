@@ -21,7 +21,8 @@ defined( 'ABSPATH' ) || exit;
  * - bank transfer (bacs), order on hold  -> proforma, issued (number, VS =
  *   order number, PAY by square on its PDF)
  * - Denár pairs the payment (webhook document.paid on the proforma)
- *   -> WC_Order::payment_complete() -> invoice from the proforma, paid
+ *   -> invoice from the proforma, paid -> WC_Order::payment_complete()
+ *   (the invoice first, so the e-mails of the paid order can attach it)
  * - paid order (card, gateway) and every order reaching one of the
  *   statuses chosen in the settings (processing and completed by default,
  *   custom statuses such as "Paid" may be added) -> invoice, paid; with
@@ -43,13 +44,13 @@ final class OrderSync {
 	public const GROUP = 'denar';
 
 	/**
-	 * Waits between attempts after a transport error, 429 or 5xx (seconds).
-	 */
-	/**
 	 * Bank day of the proforma payment paired in Denár (Y-m-d).
 	 */
 	private const PAID_META = '_denar_paid_at';
 
+	/**
+	 * Waits between attempts after a transport error, 429 or 5xx (seconds).
+	 */
 	private const RETRY_DELAYS = array( 60, 300, 1800, 7200, 43200 );
 
 	/**
@@ -144,7 +145,7 @@ final class OrderSync {
 	 * Queues a task; the same pending task is queued once.
 	 *
 	 * @param int    $order_id  Order id.
-	 * @param string $task      proforma|invoice|cancel|refund.
+	 * @param string $task      proforma|invoice|paid|cancel|refund.
 	 * @param int    $refund_id Refund id for the refund task.
 	 */
 	public static function enqueue( int $order_id, string $task, int $refund_id = 0 ): void {
@@ -177,6 +178,7 @@ final class OrderSync {
 			match ( (string) $task ) {
 				'proforma' => self::proforma( $order, $client ),
 				'invoice'  => self::invoice( $order, $client ),
+				'paid'     => self::paid( $order, $client ),
 				'cancel'   => self::cancel( $order, $client ),
 				'refund'   => self::refund( $order, (int) $refund_id, $client ),
 				default    => null,
@@ -408,6 +410,11 @@ final class OrderSync {
 			return;
 		}
 
+		// A repeated delivery while the task still waits: nothing new to say.
+		if ( function_exists( 'as_has_scheduled_action' ) && as_has_scheduled_action( self::HOOK, array( $order->get_id(), 'paid', 0, 0 ), self::GROUP ) ) {
+			return;
+		}
+
 		$order->add_order_note(
 			sprintf(
 				/* translators: %s: document number */
@@ -416,20 +423,73 @@ final class OrderSync {
 			)
 		);
 
-		// Status (the one chosen in the settings), paid date, stock - and the invoice task.
+		// The invoice first, the payment after it: an order of downloads goes
+		// straight to completed and its e-mail must already find the invoice.
+		// Queued - the webhook answers at once.
+		self::enqueue( $order->get_id(), 'paid' );
+	}
+
+	/**
+	 * Proforma paired in Denár: the invoice, then the payment of the order
+	 * (status, paid date, stock, e-mails - these attach the invoice PDF).
+	 *
+	 * @param \WC_Order $order  Order.
+	 * @param Client    $client API client.
+	 *
+	 * @throws ApiException When the invoice failed; the payment is completed anyway.
+	 */
+	private static function paid( \WC_Order $order, Client $client ): void {
+		$failure = null;
+
+		try {
+			self::invoice( $order, $client );
+		} catch ( ApiException $e ) {
+			$failure = $e;
+		}
+
+		$order = wc_get_order( $order->get_id() );
+		if ( $order instanceof \WC_Order && ! $order->is_paid() ) {
+			self::complete_payment( $order );
+		}
+
+		if ( null !== $failure ) {
+			throw $failure;
+		}
+	}
+
+	/**
+	 * Marks the order paid. An order that needs processing gets the status
+	 * chosen in the settings; one that does not (downloads only) is completed
+	 * by WooCommerce as usual.
+	 *
+	 * @param \WC_Order $order Order.
+	 */
+	private static function complete_payment( \WC_Order $order ): void {
 		$status = Settings::paid_status();
-		$set    = static fn () => $status;
+		$set    = static fn ( $current ) => self::status_after_payment( (string) $current, $status );
 		add_filter( 'woocommerce_payment_complete_order_status', $set, 100 );
 		$order->payment_complete();
 		remove_filter( 'woocommerce_payment_complete_order_status', $set, 100 );
 
-		if ( '' !== $paid_on && 1 === preg_match( '/^\d{4}-\d{2}-\d{2}$/', $paid_on ) ) {
+		$paid_on = (string) $order->get_meta( self::PAID_META );
+		if ( 1 === preg_match( '/^\d{4}-\d{2}-\d{2}$/', $paid_on ) ) {
 			$order = wc_get_order( $order->get_id() );
 			if ( $order instanceof \WC_Order ) {
 				$order->set_date_paid( $paid_on . ' 12:00:00' );
 				$order->save();
 			}
 		}
+	}
+
+	/**
+	 * Status after the payment: WooCommerce proposes "processing" for an
+	 * order with something to ship - only that one is replaced.
+	 *
+	 * @param string $proposed Status proposed by WooCommerce.
+	 * @param string $chosen   Status from the settings.
+	 */
+	public static function status_after_payment( string $proposed, string $chosen ): string {
+		return 'processing' === $proposed ? $chosen : $proposed;
 	}
 
 	/**

@@ -34,4 +34,21 @@ final class InvoiceAttachmentTest extends TestCase {
 		$this->assertSame( 'Zalohova-faktura-ZF-2026-7.pdf', InvoiceAttachment::file_name( 'advance', 'ZF/2026/7' ) );
 		$this->assertSame( 'Faktura.pdf', InvoiceAttachment::file_name( 'invoice', '' ) );
 	}
+
+	public function test_only_a_consumer_gets_the_sentence_about_the_attachment(): void {
+		$consumer = array( 'company' => ' ', 'ico' => '', 'dic' => '', 'ic_dph' => '' );
+
+		$this->assertFalse( InvoiceAttachment::is_business( $consumer ) );
+		$this->assertFalse( InvoiceAttachment::is_business( array() ) );
+		$this->assertTrue( InvoiceAttachment::is_business( array( 'company' => 'Firma s. r. o.' ) + $consumer ) );
+		// A sole trader without a company name, only with an id.
+		$this->assertTrue( InvoiceAttachment::is_business( array( 'ico' => '12345678' ) + $consumer ) );
+		$this->assertTrue( InvoiceAttachment::is_business( array( 'dic' => '2020123456' ) + $consumer ) );
+		$this->assertTrue( InvoiceAttachment::is_business( array( 'ic_dph' => 'SK2020123456' ) + $consumer ) );
+	}
+
+	public function test_sentence_carries_the_invoice_number(): void {
+		$this->assertSame( 'Faktúru E2-20260004 nájdete v prílohe.', InvoiceAttachment::note_text( ' Faktúru {number} nájdete v prílohe. ', 'E2-20260004' ) );
+		$this->assertSame( 'Faktúra je v prílohe.', InvoiceAttachment::note_text( 'Faktúra je v prílohe.', 'E2-20260004' ) );
+	}
 }

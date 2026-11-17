@@ -357,6 +357,15 @@ final class SettingsPage {
 				'default' => Settings::attach_emails(),
 			),
 			array(
+				'id'          => Settings::OPTION_ATTACH_NOTE,
+				'title'       => __( 'Sentence about the attached invoice', 'denar-for-woocommerce' ),
+				'type'        => 'text',
+				'css'         => 'min-width:400px;',
+				'default'     => '',
+				'placeholder' => __( 'The invoice {number} is attached to this e-mail.', 'denar-for-woocommerce' ),
+				'desc'        => __( 'Printed above the order table of an e-mail that carries the invoice PDF; {number} is the invoice number. Only for customers without a company name, IČO or DIČ - a company gets its invoice as an e-invoice. Empty = no sentence.', 'denar-for-woocommerce' ),
+			),
+			array(
 				'id'          => Settings::OPTION_NUMBER_SERIES,
 				'title'       => __( 'Number series', 'denar-for-woocommerce' ),
 				'type'        => 'text',

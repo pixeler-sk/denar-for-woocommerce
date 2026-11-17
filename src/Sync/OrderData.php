@@ -28,6 +28,23 @@ final class OrderData {
 	);
 
 	/**
+	 * Company name, IČO, DIČ and IČ DPH of the order - all empty for a consumer.
+	 *
+	 * @param \WC_Order $order Order.
+	 * @return array{company: string, ico: string, dic: string, ic_dph: string}
+	 */
+	public static function company_fields( \WC_Order $order ): array {
+		$meta = (array) apply_filters( 'denar_wc_company_meta_keys', self::COMPANY_META, $order );
+
+		return array(
+			'company' => (string) $order->get_billing_company(),
+			'ico'     => isset( $meta['ico'] ) ? (string) $order->get_meta( $meta['ico'] ) : '',
+			'dic'     => isset( $meta['dic'] ) ? (string) $order->get_meta( $meta['dic'] ) : '',
+			'ic_dph'  => isset( $meta['ic_dph'] ) ? (string) $order->get_meta( $meta['ic_dph'] ) : '',
+		);
+	}
+
+	/**
 	 * Plain order data for PayloadBuilder::document().
 	 *
 	 * @param \WC_Order $order    Order.
@@ -66,7 +83,7 @@ final class OrderData {
 			);
 		}
 
-		$meta = (array) apply_filters( 'denar_wc_company_meta_keys', self::COMPANY_META, $order );
+		$company = self::company_fields( $order );
 
 		$data = array(
 			'order_id'           => $order->get_id(),
@@ -82,7 +99,7 @@ final class OrderData {
 			'billing'            => array(
 				'first_name' => $order->get_billing_first_name(),
 				'last_name'  => $order->get_billing_last_name(),
-				'company'    => $order->get_billing_company(),
+				'company'    => $company['company'],
 				'address_1'  => $order->get_billing_address_1(),
 				'address_2'  => $order->get_billing_address_2(),
 				'city'       => $order->get_billing_city(),
@@ -90,9 +107,9 @@ final class OrderData {
 				'country'    => $order->get_billing_country(),
 				'email'      => $order->get_billing_email(),
 				'phone'      => $order->get_billing_phone(),
-				'ico'        => isset( $meta['ico'] ) ? (string) $order->get_meta( $meta['ico'] ) : '',
-				'dic'        => isset( $meta['dic'] ) ? (string) $order->get_meta( $meta['dic'] ) : '',
-				'ic_dph'     => isset( $meta['ic_dph'] ) ? (string) $order->get_meta( $meta['ic_dph'] ) : '',
+				'ico'        => $company['ico'],
+				'dic'        => $company['dic'],
+				'ic_dph'     => $company['ic_dph'],
 			),
 			'lines'              => $lines,
 			'discount_net'       => (float) $order->get_discount_total(),

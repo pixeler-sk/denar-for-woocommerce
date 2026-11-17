@@ -11,6 +11,7 @@ use Denar\WooCommerce\Api\ApiException;
 use Denar\WooCommerce\Api\Client;
 use Denar\WooCommerce\Plugin;
 use Denar\WooCommerce\Settings;
+use Denar\WooCommerce\Sync\OrderData;
 use Denar\WooCommerce\Sync\OrderState;
 use Denar\WooCommerce\Sync\OrderSync;
 
@@ -26,6 +27,10 @@ defined( 'ABSPATH' ) || exit;
  * in the admin, cron or CLI, never in the checkout or a gateway callback.
  * Any failure only leaves the e-mail without the attachment: the e-mail
  * itself always goes out.
+ *
+ * A sentence from the settings ("The invoice is attached") is printed above
+ * the order table of such an e-mail - only when the PDF really is there, and
+ * only for a consumer: a company gets its invoice as an e-invoice.
  */
 final class InvoiceAttachment {
 
@@ -42,10 +47,81 @@ final class InvoiceAttachment {
 	private static array $files = array();
 
 	/**
+	 * PDF file of an order and role fetched in this request ('' = failed),
+	 * so the note and the attachment of one e-mail share one download.
+	 *
+	 * @var array<string, string>
+	 */
+	private static array $fetched = array();
+
+	/**
 	 * Hooks.
 	 */
 	public static function register(): void {
 		add_filter( 'woocommerce_email_attachments', array( self::class, 'attach' ), 10, 3 );
+		add_action( 'woocommerce_email_before_order_table', array( self::class, 'note' ), 10, 4 );
+	}
+
+	/**
+	 * Action woocommerce_email_before_order_table: the sentence about the
+	 * attached invoice.
+	 *
+	 * @param mixed $order         Order.
+	 * @param mixed $sent_to_admin Whether the e-mail goes to the shop.
+	 * @param mixed $plain_text    Whether the plain text part is rendered.
+	 * @param mixed $email         E-mail object.
+	 */
+	public static function note( $order, $sent_to_admin = false, $plain_text = false, $email = null ): void {
+		$template = Settings::attach_note();
+
+		if ( '' === $template || $sent_to_admin || ! $email instanceof \WC_Email
+			|| ! $order instanceof \WC_Order || $order instanceof \WC_Order_Refund || ! Settings::enabled() ) {
+			return;
+		}
+
+		$role = self::role_for( (string) $email->id, Settings::attach_emails() );
+		if ( null === $role || self::is_business( OrderData::company_fields( $order ) ) ) {
+			return;
+		}
+
+		$document = self::document( $order, $role );
+		if ( null === $document || null === self::file( $order, $role, $document ) ) {
+			return;
+		}
+
+		$text = self::note_text( $template, $document['number'] );
+
+		if ( $plain_text ) {
+			echo "\n" . esc_html( $text ) . "\n\n";
+		} else {
+			echo '<p>' . esc_html( $text ) . '</p>';
+		}
+	}
+
+	/**
+	 * Whether the customer bought as a company: a company name or any of
+	 * IČO, DIČ, IČ DPH on the order.
+	 *
+	 * @param array $fields company, ico, dic, ic_dph.
+	 */
+	public static function is_business( array $fields ): bool {
+		foreach ( array( 'company', 'ico', 'dic', 'ic_dph' ) as $key ) {
+			if ( '' !== trim( (string) ( $fields[ $key ] ?? '' ) ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * The sentence with {number} replaced by the document number.
+	 *
+	 * @param string $template Sentence from the settings.
+	 * @param string $number   Document number.
+	 */
+	public static function note_text( string $template, string $number ): string {
+		return trim( str_replace( '{number}', $number, $template ) );
 	}
 
 	/**
@@ -69,19 +145,34 @@ final class InvoiceAttachment {
 			return $attachments;
 		}
 
-		try {
-			$file = self::write( $document, Client::from_settings()->pdf( $document['id'] ) );
-		} catch ( ApiException $e ) {
-			Plugin::log( 'warning', sprintf( 'Order %d: PDF %s not attached - %s', $email_object->get_id(), $document['number'], $e->getMessage() ) );
-
-			return $attachments;
-		}
-
+		$file = self::file( $email_object, $role, $document );
 		if ( null !== $file ) {
 			$attachments[] = $file;
 		}
 
 		return $attachments;
+	}
+
+	/**
+	 * Temporary PDF file of the document, downloaded once per request.
+	 *
+	 * @param \WC_Order $order    Order.
+	 * @param string    $role     Role.
+	 * @param array     $document Document summary.
+	 */
+	private static function file( \WC_Order $order, string $role, array $document ): ?string {
+		$key = $order->get_id() . ':' . $role . ':' . $document['id'];
+
+		if ( ! isset( self::$fetched[ $key ] ) ) {
+			try {
+				self::$fetched[ $key ] = (string) self::write( $document, Client::from_settings()->pdf( $document['id'] ) );
+			} catch ( ApiException $e ) {
+				Plugin::log( 'warning', sprintf( 'Order %d: PDF %s not attached - %s', $order->get_id(), $document['number'], $e->getMessage() ) );
+				self::$fetched[ $key ] = '';
+			}
+		}
+
+		return '' !== self::$fetched[ $key ] && is_file( self::$fetched[ $key ] ) ? self::$fetched[ $key ] : null;
 	}
 
 	/**
@@ -179,6 +270,7 @@ final class InvoiceAttachment {
 				rmdir( $dir );
 			}
 		}
-		self::$files = array();
+		self::$files   = array();
+		self::$fetched = array();
 	}
 }

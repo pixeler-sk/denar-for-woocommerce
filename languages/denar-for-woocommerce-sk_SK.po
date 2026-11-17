@@ -411,3 +411,21 @@ msgstr ""
 #, php-format
 msgid "Denár: %s"
 msgstr "Denár: %s"
+
+#: src/Admin/SettingsPage.php
+msgid "Sentence about the attached invoice"
+msgstr "Veta o priloženej faktúre"
+
+#: src/Admin/SettingsPage.php
+msgid "The invoice {number} is attached to this e-mail."
+msgstr "Faktúru {number} nájdete v prílohe tohto e-mailu."
+
+#: src/Admin/SettingsPage.php
+msgid ""
+"Printed above the order table of an e-mail that carries the invoice PDF; "
+"{number} is the invoice number. Only for customers without a company name, "
+"IČO or DIČ - a company gets its invoice as an e-invoice. Empty = no sentence."
+msgstr ""
+"Vypíše sa nad tabuľkou objednávky v e-maile, ktorý nesie PDF faktúry; "
+"{number} je číslo faktúry. Len pre zákazníkov bez názvu firmy, IČO a DIČ - "
+"firma dostane faktúru ako e-faktúru. Prázdne = bez vety."

@@ -41,6 +41,8 @@ final class Settings {
 
 	public const OPTION_ATTACH_EMAILS = 'denar_wc_attach_emails';
 
+	public const OPTION_ATTACH_NOTE = 'denar_wc_attach_note';
+
 	public const OPTION_PAID_STATUS = 'denar_wc_paid_status';
 
 	public const DEFAULT_INVOICE_STATUSES = array( 'processing', 'completed' );
@@ -124,6 +126,14 @@ final class Settings {
 		$default = 'no' === get_option( self::OPTION_ATTACH_PDF ) ? array() : self::DEFAULT_ATTACH_EMAILS;
 
 		return self::list_option( self::OPTION_ATTACH_EMAILS, $default );
+	}
+
+	/**
+	 * Sentence printed in an e-mail that carries the invoice PDF, for
+	 * consumers only; {number} is the invoice number. Empty = no sentence.
+	 */
+	public static function attach_note(): string {
+		return trim( (string) get_option( self::OPTION_ATTACH_NOTE, '' ) );
 	}
 
 	/**

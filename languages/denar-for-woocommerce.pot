@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Denár for WooCommerce 0.4.1\n"
+"Project-Id-Version: Denár for WooCommerce 0.4.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/denar-for-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-17T10:11:07+00:00\n"
+"POT-Creation-Date: 2026-11-17T16:25:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: denar-for-woocommerce\n"
@@ -267,30 +267,42 @@ msgid "The invoice PDF from Denár goes with these customer e-mails (and always 
 msgstr ""
 
 #: src/Admin/SettingsPage.php:361
-msgid "Number series"
-msgstr ""
-
-#: src/Admin/SettingsPage.php:364
-msgid "default"
+msgid "Sentence about the attached invoice"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:365
-msgid "Code of a number series from Denár -> Company -> Number series. Empty = the series set on the API key, or the default one."
+msgid "The invoice {number} is attached to this e-mail."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:369
-msgid "EU reverse charge"
+#: src/Admin/SettingsPage.php:366
+msgid "Printed above the order table of an e-mail that carries the invoice PDF; {number} is the invoice number. Only for customers without a company name, IČO or DIČ - a company gets its invoice as an e-invoice. Empty = no sentence."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:370
+msgid "Number series"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:373
-msgid "Goods to another EU member state"
+msgid "default"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:374
+msgid "Code of a number series from Denár -> Company -> Number series. Empty = the series set on the API key, or the default one."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:378
+msgid "EU reverse charge"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:382
+msgid "Goods to another EU member state"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:383
 msgid "Services to another EU member state"
 msgstr ""
 
-#: src/Admin/SettingsPage.php:376
+#: src/Admin/SettingsPage.php:385
 msgid "Used when the order was placed without VAT because of a verified EU VAT id."
 msgstr ""
 
@@ -299,13 +311,13 @@ msgid "The Denár API key is not set."
 msgstr ""
 
 #. translators: %s: order number
-#: src/Sync/OrderData.php:80
+#: src/Sync/OrderData.php:97
 #, php-format
 msgid "Order no. %s"
 msgstr ""
 
 #. translators: %s: order number
-#: src/Sync/OrderData.php:140
+#: src/Sync/OrderData.php:157
 #, php-format
 msgid "Refund for order no. %s"
 msgstr ""
@@ -339,19 +351,19 @@ msgid "Denár: credit note %s issued."
 msgstr ""
 
 #. translators: %s: document number
-#: src/Sync/OrderSync.php:416
+#: src/Sync/OrderSync.php:421
 #, php-format
 msgid "Denár: payment of proforma %s received."
 msgstr ""
 
 #. translators: 1: Denár total, 2: shop total
-#: src/Sync/OrderSync.php:571
+#: src/Sync/OrderSync.php:576
 #, php-format
 msgid "Denár: the draft total %1$s differs from the shop total %2$s (rounding of prices with VAT). The draft was not issued - check it in Denár."
 msgstr ""
 
 #. translators: %s: error message
-#: src/Sync/OrderSync.php:633
+#: src/Sync/OrderSync.php:638
 #, php-format
 msgid "Denár: %s"
 msgstr ""
